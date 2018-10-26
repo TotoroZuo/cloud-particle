@@ -1,0 +1,141 @@
+.login-main
+  display: flex
+  position absolute
+  left 0
+  right 0
+  top 0
+  bottom 0
+  background-repeat no-repeat
+  background-size cover
+  z-index 1
+  overflow hidden
+
+// .backgroud-pic-box:after
+//   content: ""
+//   width:101%
+//   height:100%
+//   position: absolute
+//   left:-16px
+//   top:0
+//   background: inherit
+//   filter: blur(20px)
+//   z-index: 2
+//   background: linear-gradient(0deg, #0b4182 1%, #1e88e5 100%);
+.login-main-left
+    flex 1
+    
+.backgroud-pic-box
+    position: absolute;
+    width: 65%;
+    top: 0;
+    bottom: 0;
+    background: url('/icons/login-bc.png') no-repeat center center;
+    background-size: cover;
+.login-main-right
+    position relative
+    z-index: 4
+    display: flex
+    width: 42%
+    min-width 500px
+    align-items: center;
+    justify-content: center;
+    background-color:rgba(21,38,55,1);
+    background-image: url('/icons/login-right-bc.png');
+    background-repeat: repeat;
+    box-shadow: 0 3px 5px -1px rgba(0,0,30,.2), 0 5px 8px 0 rgba(0,0,30,.14), 0 1px 14px 0 rgba(0,0,30,.12);
+.login-main-right-arrow
+    display: block;
+    position: absolute;
+    left: -30px;
+    top:20%;
+    content:'';
+    width: 60px;
+    height: 60px;
+    background-color:rgba(21,38,55,1);
+    background-image: url('/icons/login-right-bc.png');
+    background-repeat: repeat;
+    transform: rotate(45deg)
+    z-index 2
+.login-title
+    text-align: center;
+    letter-spacing: 1rem;
+    padding: 15px;
+    font-size:36px;
+    font-family:MicrosoftYaHei;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+.login-title-en
+    text-align: center;
+    letter-spacing: 0.3rem;
+    padding: 15px;
+    font-size:20px;
+    font-family:CambriaMath;
+    font-weight:400;
+    color:rgba(255,255,255,1);
+    opacity:0.6;
+    margin-bottom: 30px;
+.login-footer
+  position fixed
+  right 0
+  bottom 0
+  width 42%
+  height 40px
+  line-height 40px
+  color #f0f0f0;
+  font-size 13px
+  text-align center
+  z-index 3
+.login-footer a
+    color: #f0f0f0;
+.login-form-box
+  width 400px;
+  padding 30px 30px 20px
+
+.login-paper
+  -webkit-transition: all .45s cubic-bezier(.23,1,.32,1)
+  transition: all .45s cubic-bezier(.23,1,.32,1)
+  color: rgba(0,0,0,.87)
+ 
+.login-form-inputs
+    width: 90%;
+    margin: 0 auto
+
+.loginform-enter-active
+  transition: all 1s
+
+.loginform-enter
+  opacity: 0;
+  transform: translateY(30px)
+.login-input
+  margin-bottom 40px
+  &:first-child
+    margin-top 20px
+
+>>>.login-input .el-input__suffix
+    font-size: 24px;
+    padding-top: 10px;
+
+>>>.login-input .el-input__inner::placeholder
+    color: #999;
+
+>>> .login-input .el-input__inner
+    background-color: transparent
+    color:#fff;
+    border: none;
+    border-bottom: 1px solid rgba(153,153,153,1);
+
+>>>.login-input .el-input__inner:focus {
+    outline: none;
+    border-bottom: 1px solid #409eff;
+}
+
+.login-msg
+    font-size: 13px
+    color: #F56C6C
+    margin-top: -10px
+    margin-bottom: 10px
+    padding: 5px 0
+
+.do-login-btn
+    width: 100%;
+    font-size: 16px;

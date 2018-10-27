@@ -16,148 +16,79 @@ const frameIn = [
         meta: {
           title: 'index',
           name: '主页',
-          icon: 'home'
+          icon: 'home',
+          requiresAuth: true
         },
         component: () => import('@/pages/main/Home.vue')
       },
       {
-        path: 'about',
-        name: 'about',
+        path: 'warning',
+        name: 'warning',
         meta: {
-          title: 'about',
-          name: '关于',
+          title: 'warning',
+          name: '预警',
           icon: 'dashboard',
-          noCache: true,
           requiresAuth: true
         },
-        component: () => import('@/pages/main/About.vue')
+        component: () => import('@/pages/main/warning/List.vue')
       },
       {
-        path: '/ua',
+        path: 'people',
+        name: 'people',
+        meta: {
+          title: 'people',
+          name: '人员信息',
+          icon: 'dashboard',
+          requiresAuth: true
+        },
+        component: () => import('@/pages/main/people/List.vue')
+      },
+      {
+        path: 'statistics',
+        name: 'statistics',
+        meta: {
+          title: 'statistics',
+          name: '数据统计',
+          icon: 'dashboard',
+          requiresAuth: true
+        },
+        component: () => import('@/pages/main/statistics/List.vue')
+      },
+      {
+        path: 'imports',
+        name: 'imports',
+        meta: {
+          title: 'imports',
+          name: '导入文件',
+          icon: 'dashboard',
+          requiresAuth: true
+        },
+        component: () => import('@/pages/main/imports/List.vue')
+      },
+      {
+        path: 'setting',
+        name: 'setting',
+        meta: {
+          title: 'setting',
+          name: '配置',
+          icon: 'dashboard',
+          requiresAuth: true
+        },
+        component: () => import('@/pages/main/setting/List.vue')
+      },
+      {
+        path: 'ua',
         name: 'ua',
         component: () => import('@/pages/main/Ua.vue'),
         meta: {
           title: '浏览器信息',
           name: '浏览器代理',
           icon: 'dashboard',
-          noCache: true,
-          requiresAuth: true
+          requiresAuth: false
         }
       }
     ]
-  },
-  {
-    path: '/system',
-    redirect: { name: 'users' },
-    component: layoutIntrance,
-    children: [
-      {
-        path: 'users',
-        name: 'users',
-        meta: {
-          title: 'users',
-          name: '用户列表',
-          icon: 'group',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/users/List.vue')
-      },
-      {
-        path: 'roles',
-        name: 'roles',
-        meta: {
-          title: 'roles',
-          name: '角色管理',
-          icon: 'local_mall',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/role/List.vue')
-      },
-      {
-        path: 'menus',
-        name: 'menus',
-        meta: {
-          title: 'menus',
-          name: '菜单管理',
-          icon: 'queue_music',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/menu/List.vue')
-      }, {
-        path: 'apis',
-        name: 'apis',
-        meta: {
-          title: 'apis',
-          name: '接口管理',
-          icon: 'developer_board',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/api/List.vue')
-      }, {
-        path: 'notice',
-        name: 'notice',
-        meta: {
-          title: 'notice',
-          name: '通知公告',
-          icon: 'developer_board',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/notice/List.vue')
-      }, {
-        path: 'help',
-        name: 'help',
-        meta: {
-          title: 'help',
-          name: '帮助中心',
-          icon: 'developer_board',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/help/List.vue')
-      }, {
-        path: 'option',
-        name: 'option',
-        meta: {
-          title: 'option',
-          name: '操作日志',
-          icon: 'developer_board',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/option/List.vue')
-      }, {
-        path: 'feedback',
-        name: 'feedback',
-        meta: {
-          title: 'feedback',
-          name: '问题反馈',
-          icon: 'developer_board',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/feedback/List.vue')
-      },
-      {
-        path: 'message',
-        name: 'message',
-        meta: {
-          title: 'message',
-          name: '消息中心',
-          icon: 'developer_board',
-          noCache: true,
-          requiresAuth: true
-        },
-        component: () => import('@/pages/main/system/message/List.vue')
-      }
-
-    ]
-  }
-]
+  }]
 
 /**
  * 在主框架之外显示
@@ -171,7 +102,6 @@ const frameOut = [
       title: 'login',
       name: '登陆',
       icon: 'home',
-      noCache: true,
       requiresAuth: false
     },
     component: () => import('@/pages/login/Login.vue')
@@ -186,7 +116,12 @@ const errorPage = [
   {
     path: '*',
     name: '404',
-    meta: { title: '404', name: '404', icon: 'error', noCache: true },
+    meta: {
+      title: '404',
+      name: '404',
+      icon: 'error',
+      requiresAuth: false
+    },
     component: () => import('@/pages/error/404.vue')
   }
 ]

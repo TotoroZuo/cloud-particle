@@ -9,8 +9,10 @@ module.exports = {
     externals: {
       vue: 'Vue',
       vuex: 'Vuex',
+      echarts: 'echarts',
       'vue-router': 'VueRouter',
       'element-ui': 'ELEMENT'
+
     },
     optimization: {
       minimizer: [

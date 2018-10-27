@@ -8,12 +8,13 @@
                     </div>
                     <div class="header-content-middle">
                         <ul  class="el-menu--horizontal el-menu" style="background-color: rgb(21, 38, 55);">
-                            <li  class="el-menu-item layout-menu-item is-active" >首页</li>
-                            <li  class="el-menu-item layout-menu-item" >预警</li>
-                            <li  class="el-menu-item layout-menu-item">人员信息</li>
-                            <li  class="el-menu-item layout-menu-item">数据统计</li>
-                            <li  class="el-menu-item layout-menu-item">导入文件</li>
-                            <li  class="el-menu-item layout-menu-item">配置</li>
+                            <li
+                            v-for="nav in navs"
+                            :key="nav.path"
+                            :class="['el-menu-item','layout-menu-item',{'is-active': nav.path == activeMenu}]"
+                            @click="handleClickMenu(nav.path)" >
+                              {{nav.name}}
+                            </li>
                         </ul>
                     </div>
                     <div class="header-content-right">
@@ -30,16 +31,8 @@
                 </div>
             </el-header>
 
-            <!-- iframe -->
-            <el-main class="layout-main-iframe" v-if="iframeUrl">
-                <el-scrollbar class="latout-scrollbar" style="height:100%;">
-                <div class="layout-iframe-wrap">
-                    <iframe :src="iframeUrl"  class="layout-iframe" frameborder="0" ></iframe>
-                </div>
-                </el-scrollbar>
-            </el-main>
             <!-- router -->
-            <el-main class="layout-main" v-else>
+            <el-main class="layout-main">
                 <el-scrollbar class="latout-scrollbar" style="height:100%;">
                 <!-- <root-path/> -->
                 <div  >
@@ -47,7 +40,6 @@
                 </div>
                  </el-scrollbar>
             </el-main>
-
             <el-footer class="layout-footer" height="40px">
                 © {{curYear}} <a href="https://github.com/TotoroZuo/royal-admin">{{copyRight}}</a>
             </el-footer>
@@ -59,6 +51,32 @@ import setting from '@/config.js' // 配置文件
 import avator from '@/components/Avator.vue' // 头像组件
 import rootPath from '@/components/RouterPath.vue' // 当前路径
 const thisYear = new Date().getFullYear()
+const navs = [
+  {
+    name: '首页',
+    path: '/index'
+  },
+  {
+    name: '预警',
+    path: '/warning'
+  },
+  {
+    name: '人员信息',
+    path: '/people'
+  },
+  {
+    name: '数据统计',
+    path: '/statistics'
+  },
+  {
+    name: '导入文件',
+    path: '/imports'
+  },
+  {
+    name: '配置',
+    path: '/setting'
+  }
+]
 export default {
   name: 'mainLayout',
   props: {
@@ -70,29 +88,12 @@ export default {
   },
   data () {
     return {
+      navs,
       menuOpen: false,
       copyRight: setting.copyRight,
       curYear: thisYear,
       menuWith: '201px',
-      iframeUrl: '',
-      activeIndex2: '1',
-      gridData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }]
+      iframeUrl: ''
     }
   },
   mounted () {
@@ -102,15 +103,6 @@ export default {
     toggleOpenMenu () {
       this.menuOpen = !this.menuOpen
       this.changeMenuWidth()
-    },
-    changeMenuWidth () {
-      setTimeout(() => {
-        if (this.menuOpen) {
-          this.menuWith = '66px'
-        } else {
-          this.menuWith = '201px'
-        }
-      }, 0)
     },
     doLogout () {
       this.$store.commit('user/clear')
@@ -124,22 +116,13 @@ export default {
       })
     },
     // 处理点击菜单
-    handleClickMenu (path, _blank) {
-      if (_blank) {
-        window.open(path)
-        return false
-      }
-      if (path.indexOf('http') !== -1 || path.indexOf('https') !== -1) {
-        this.iframeUrl = path
-      } else {
-        this.iframeUrl = ''
-        this.$router.push({ path })
-      }
+    handleClickMenu (path) {
+      this.$router.push({ path })
     }
   },
   computed: {
-    active () {
-      return this.$store.state.menu.active
+    activeMenu () {
+      return this.$route.path
     },
     userToken () {
       return this.$store.state.user.token

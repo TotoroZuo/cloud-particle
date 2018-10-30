@@ -20,7 +20,7 @@
                     <div class="header-content-right">
                             <el-dropdown class="accountDropmenu">
                                 <a  class="header-account">
-                                   <span class="accountName">张莉莎</span>
+                                   <span class="accountName">{{userInfo.name}}</span>
                                 </a>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item>修改密码</el-dropdown-item>
@@ -50,38 +50,11 @@
 import setting from '@/config.js' // 配置文件
 import avator from '@/components/Avator.vue' // 头像组件
 import rootPath from '@/components/RouterPath.vue' // 当前路径
+import navs from './menuList.js' // 获取导航菜单信息
 const thisYear = new Date().getFullYear()
-const navs = [
-  {
-    name: '首页',
-    path: '/index'
-  },
-  {
-    name: '预警',
-    path: '/warning'
-  },
-  {
-    name: '人员信息',
-    path: '/people'
-  },
-  {
-    name: '数据统计',
-    path: '/statistics'
-  },
-  {
-    name: '导入文件',
-    path: '/imports'
-  },
-  {
-    name: '配置',
-    path: '/setting'
-  }
-]
+
 export default {
   name: 'mainLayout',
-  props: {
-    msg: String
-  },
   components: {
     avator,
     rootPath
@@ -91,29 +64,40 @@ export default {
       navs,
       menuOpen: false,
       copyRight: setting.copyRight,
-      curYear: thisYear,
-      menuWith: '201px',
-      iframeUrl: ''
+      curYear: thisYear
     }
   },
-  mounted () {
-    this.getMenuList()
-  },
+  mounted () {},
   methods: {
-    toggleOpenMenu () {
-      this.menuOpen = !this.menuOpen
-      this.changeMenuWidth()
-    },
     doLogout () {
-      this.$store.commit('user/clear')
-      this.$router.push({ name: 'login' })
-    },
-    // 获取菜单列表
-    getMenuList () {
-      const param = { token: this.userToken }
-      this.$apis.menu.getList(param).then((res) => {
-        this.$store.commit('menu/setList', res.data)
-      })
+      this.$apis.user
+        .doLogout({})
+        .then(res => {
+          if (!res) {
+            // 失败之后消息提醒
+            this.$notify({
+              message: '系统异常',
+              type: 'error',
+              position: 'top-right',
+              duration: 1000
+            })
+            return false
+          }
+          // 清除用户登陆状态
+          this.$store.commit('user/clear')
+          this.$router.push({ name: 'login' })
+        })
+        .catch(error => {
+          if (error) {
+            // 成功之后消息提醒
+            this.$notify({
+              message: '退出失败',
+              type: 'error',
+              position: 'top-right',
+              duration: 1000
+            })
+          }
+        })
     },
     // 处理点击菜单
     handleClickMenu (path) {
@@ -124,11 +108,8 @@ export default {
     activeMenu () {
       return this.$route.path
     },
-    userToken () {
-      return this.$store.state.user.token
-    },
-    menuList () {
-      return this.$store.state.menu.menuList
+    userInfo () {
+      return this.$store.state.user.info
     }
   }
 }
@@ -136,5 +117,3 @@ export default {
 <style lang="stylus" scoped>
     @import './layout.styl'
 </style>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->

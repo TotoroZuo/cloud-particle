@@ -34,7 +34,7 @@
       <div class="backgroud-pic-box"></div>
     </div>
 
-    <div class="login-footer">© {{curYear}} <a href="https://github.com/TotoroZuo/royal-admin">{{copyRight}}</a> </div>
+    <div class="login-footer">© {{curYear}} <a href="#">{{copyRight}}</a> </div>
   </div>
 </template>
 <script>
@@ -85,8 +85,9 @@ export default {
       this.loginDoing = true
       this.$apis.user.doLogin(params)
         .then((res) => {
-          if (res.code !== 200) {
-            this.errMsg = res.msg
+          if (res.code !== '0000') {
+            this.errMsg = res.data
+            return false
           }
           // 更改 Vuex 用户状态
           this.$store.commit('user/set', res.data)

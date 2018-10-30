@@ -12,6 +12,7 @@ import axios from 'axios'
 import qs from 'qs'
 import jsonp from 'jsonp'
 import store from '@/store/'
+import router from '../router/'
 
 // axios 配置
 axios.defaults.timeout = 5000
@@ -51,9 +52,11 @@ function checkStatus (response) {
     data = response.data
   }
   //   根据返回的code值来做不同的处理（和后端约定）
+  console.log(data)
   switch (data.code) {
-    case '9000': // 登录过期
+    case '9998': // 登录过期
       store.commit('user/clear')
+      router.push({ name: 'login' })
       break
     default:
   }
@@ -128,7 +131,7 @@ function checkCode (err) {
 function checkToken () {
   const token = sessionStorage.getItem('token')
   if (!token) {
-    window.history.pushState(null, '登陆', '/login')
+    router.push({ name: 'login' })
   }
   return token
 }

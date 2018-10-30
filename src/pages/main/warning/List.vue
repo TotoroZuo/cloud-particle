@@ -11,28 +11,28 @@
     <div class="global-list-container royal-paper royal-paper-1">
         <div class="search-container">
             <div class="search-left">
-                <el-radio-group v-model="radio5" size="small">
-                    <el-radio-button label="全部预警 20000"></el-radio-button>
-                    <el-radio-button label="涉案在逃 100"  ></el-radio-button>
-                    <el-radio-button label="吸毒在逃 300"></el-radio-button>
-                    <el-radio-button label="吸涉毒人员 20"></el-radio-button>
-                    <el-radio-button label="关注人员 600"  ></el-radio-button>
-                    <el-radio-button label="历史涉案人员 1000"></el-radio-button>
-                    <el-radio-button label="非法出所 500"></el-radio-button>
+                <el-radio-group v-model="cateType" size="small" @change="getPageList">
+                    <el-radio-button :label="0" >全部预警 {{cateCount.qbxx ? cateCount.qbxx : ''}}
+                    </el-radio-button>
+                    <el-radio-button :label="4" >涉案在逃 {{cateCount.sazt ? cateCount.sazt : ''}}
+                    </el-radio-button>
+                    <el-radio-button :label="3" >吸毒在逃 {{cateCount.xdzt ? cateCount.xdzt : ''}}</el-radio-button>
+                    <el-radio-button :label="1" >吸涉毒人员 {{cateCount.xdry ? cateCount.xdry : ''}}</el-radio-button>
+                    <el-radio-button :label="2" >关注人员 {{cateCount.gzry ? cateCount.gzry : ''}}</el-radio-button>
+                    <el-radio-button :label="5" >历史涉案人员 {{cateCount.lssa ? cateCount.lssa : ''}}</el-radio-button>
+                    <el-radio-button :label="6" >非法出所 {{cateCount.ffcs ? cateCount.ffcs : ''}}</el-radio-button>
                 </el-radio-group>
             </div>
             <div class="search-right">
-                <el-input placeholder="请输入内容" size="small" v-model="input5" class="input-with-select">
-                    <el-button slot="append" icon="el-icon-search"></el-button>
+                <el-input placeholder="请输入人员姓名或身份证号" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
+                    <el-button slot="append" icon="el-icon-search" @click="getPageList"></el-button>
                 </el-input>
             </div>
 
         </div>
         <div class="list-wrap">
              <el-table
-            :data="tableData"
-            @selection-change="handleSelectionChange"
-            ref="userList"
+            :data="dataList"
             style="width: 100%">
             <el-table-column
                 label="序号"
@@ -46,31 +46,31 @@
             <el-table-column
                 label="比中人员"
                 align="center"
-                prop="name"
+                prop="personName"
                 >
             </el-table-column>
             <el-table-column
                 label="身份证号"
                 align="center"
-                prop="idcard">
+                prop="personIdCard">
             </el-table-column>
             <el-table-column
                 label="预警类型"
                 align="center"
-                prop="type">
+                prop="matchType">
             </el-table-column>
             <el-table-column
                 label="数据来源"
                 align="center"
-                prop="origin">
+                prop="dataSource">
             </el-table-column>
             <el-table-column
                 label="比中条件"
-                prop="hit">
+                prop="matchCondition">
             </el-table-column>
             <el-table-column
                 label="比中时间"
-                prop="hitTime">
+                prop="time">
             </el-table-column>
             <el-table-column label="操作" width="100" align="center">
                  <template slot-scope="props">
@@ -80,15 +80,13 @@
         </el-table>
 
         </div>
-        <div class="pagination-wrap">
+        <div class="pagination-wrap" v-if="total">
             <el-pagination
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage4"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
+            :current-page="curPage"
+            :page-size="10"
             layout="total,prev, pager, next, jumper"
-            :total="400">
+            :total="total">
             </el-pagination>
         </div>
         <!-- 用户添加编辑组件 -->
@@ -108,13 +106,20 @@ export default {
     return {
       openDialog: false,
       dialogType: 'add',
-      checkedList: [],
-      radio5: '',
-      select: '',
-      input5: '',
-      currentPage4: 1,
-      tableData5: [],
-      tableData: [
+      search: '',
+      cateType: 0,
+      curPage: 1,
+      total: 0,
+      cateCount: {
+        qbxx: 0, // 全部
+        lssa: 0, // 历史涉案人员
+        gzry: 0, // 关注人员
+        xdry: 0, // 吸涉赌人员
+        sazt: 0, // 涉案在逃
+        xdzt: 0, // 吸毒在逃
+        ffcs: 0 // 非法出所
+      },
+      dataList: [
         {
           uid: 'aaa',
           num: 1,
@@ -129,16 +134,45 @@ export default {
       multipleSelection: []
     }
   },
+  created () {
+    this.getPageList()
+    this.getCateCount()
+  },
   methods: {
-    handleSelectionChange (val) {
-      console.log(val)
-      this.checkedList = val
+    getPageList () {
+      const param = {
+        page: this.curPage,
+        matchType: this.cateType,
+        search: this.search
+      }
+      this.$apis.warning.getPageList(param)
+        .then(res => {
+          if (res.code == '0000') {
+            this.total = res.count
+            this.dataList = res.data
+          }
+        })
+        .catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
     },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+    getCateCount () {
+      this.$apis.warning.getCateCount({})
+        .then(res => {
+          if (res.code == '0000') {
+            this.cateCount = res.data
+          }
+        }).catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.curPage = val
+      this.getPageList()
     },
     showEditorUser () {
       this.dialogType = 'editor'
@@ -175,8 +209,9 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.user-list-container
+.global-list-container
     padding 15px
+    border-radius: 6px;
 >>>.search-left .el-radio-button
     margin-right 10px;
 >>>.search-left .el-radio-button__inner
@@ -189,8 +224,8 @@ export default {
     margin-top:20px;
 .search-container
     padding 15px
-    border: 1px solid #ebeef5;
-    border-bottom none
+    // border: 1px solid #ebeef5;
+    // border-bottom none
 .search-container:after
     content ''
     display block
@@ -201,6 +236,6 @@ export default {
     margin-right 15px
 .pagination-wrap
     padding 15px 0
-    border: 1px solid #ebeef5;
-    border-top none
+    // border: 1px solid #ebeef5;
+    // border-top none
 </style>

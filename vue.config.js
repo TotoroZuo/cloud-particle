@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   baseUrl: process.env.NODE_ENV === 'production' ? '/' : '/',
   devServer: {
-    proxy: 'http://yapi.demo.qunar.com/mock/18784'
+    proxy: 'http://localhost:8084'
   },
   configureWebpack: {
     externals: {
@@ -12,7 +12,6 @@ module.exports = {
       echarts: 'echarts',
       'vue-router': 'VueRouter',
       'element-ui': 'ELEMENT'
-
     },
     optimization: {
       minimizer: [

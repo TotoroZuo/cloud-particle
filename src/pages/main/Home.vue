@@ -9,7 +9,7 @@
                 <div class="home-item-search">
                     <el-date-picker
                         class="home-search-date"
-                        v-model="search.date"
+                        v-model="lineChart.date"
                         size="mini"
                         type="daterange"
                         format="yyyy-MM-dd"
@@ -18,14 +18,14 @@
                         start-placeholder="起始时间"
                         end-placeholder="结束时间">
                     </el-date-picker>
-                    <el-select v-model="value" size="mini" class="home-search-select" placeholder="请选择">
-                            <el-option
-                            v-for="item in options"
+                    <el-select v-model="lineChart.type" size="mini" class="home-search-select" placeholder="请选择分类">
+                        <el-option
+                            v-for="item in typeList"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
-                            </el-option>
-                        </el-select>
+                        </el-option>
+                    </el-select>
                 </div>
                 <div class="clear"></div>
               </div>
@@ -37,52 +37,31 @@
               <div class="home-item-title">
                   最新预警
               </div>
-               <Timeline>
-                    <TimelineItem>
+               <Timeline v-if="warningList.length">
+                    <template v-for="(item,index) in warningList">
+                        <TimelineItem :key="item.id" v-if="index<1">
                         <p class="timeline-content timeline-active">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
+                            <span class="titmeline-span">{{item.dataSource}}</span>
+                            <span class="titmeline-span">{{item.personName}}</span>
+                            <span class="titmeline-span">{{item.personIdCard}}</span>
                         </p>
-                        <p class="timeline-time timeline-active">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
+                        <p class="timeline-time timeline-active">{{item.gmtCreate}}</p>
+                        </TimelineItem>
+                        <TimelineItem :key="item.id" v-else>
+                            <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
+                            <p class="timeline-content">
+                                <span class="titmeline-span">{{item.dataSource}}</span>
+                                <span class="titmeline-span">{{item.personName}}</span>
+                                <span class="titmeline-span">{{item.personIdCard}}</span>
+                            </p>
+                            <p class="timeline-time">{{item.gmtCreate}}</p>
+                        </TimelineItem>
+                    </template>
+
                 </Timeline>
+                <div class="home-item-nodata" v-else>
+                        暂无数据
+                </div>
           </div>
       </div>
       <div class="home-container-item">
@@ -94,7 +73,7 @@
                 <div class="home-item-search">
                     <el-date-picker
                         class="home-search-date"
-                        v-model="search.date"
+                        v-model="barChart.date"
                         size="mini"
                         type="daterange"
                         format="yyyy-MM-dd"
@@ -103,9 +82,9 @@
                         start-placeholder="起始时间"
                         end-placeholder="结束时间">
                     </el-date-picker>
-                    <el-select v-model="value" size="mini" class="home-search-select" placeholder="请选择">
+                    <el-select v-model="barChart.type" size="mini" class="home-search-select" placeholder="请选择分类">
                             <el-option
-                            v-for="item in options"
+                            v-for="item in typeList"
                             :key="item.value"
                             :label="item.label"
                             :value="item.value">
@@ -122,52 +101,31 @@
               <div class="home-item-title">
                   最新人员信息
               </div>
-               <Timeline>
-                    <TimelineItem>
+               <Timeline v-if="peopleList.length">
+                    <template v-for="(item,index) in peopleList">
+                        <TimelineItem :key="item.id" v-if="index<1">
                         <p class="timeline-content timeline-active">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
+                            <span class="titmeline-span">{{item.dataSource}}</span>
+                            <span class="titmeline-span">{{item.personName}}</span>
+                            <span class="titmeline-span">{{item.personIdCard}}</span>
                         </p>
-                        <p class="timeline-time timeline-active">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
-                    <TimelineItem>
-                        <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
-                        <p class="timeline-content">
-                            <span class="titmeline-span">上门调查</span>
-                            <span class="titmeline-span">王小花</span>
-                            <span class="titmeline-span">362424199606100102</span>
-                        </p>
-                        <p class="timeline-time">2018-10-25 12:03:45</p>
-                    </TimelineItem>
+                        <p class="timeline-time timeline-active">{{item.gmtCreate}}</p>
+                        </TimelineItem>
+                        <TimelineItem :key="item.id" v-else>
+                            <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
+                            <p class="timeline-content">
+                                <span class="titmeline-span">{{item.dataSource}}</span>
+                                <span class="titmeline-span">{{item.personName}}</span>
+                                <span class="titmeline-span">{{item.personIdCard}}</span>
+                            </p>
+                            <p class="timeline-time">{{item.gmtCreate}}</p>
+                        </TimelineItem>
+                    </template>
+
                 </Timeline>
+                <div class="home-item-nodata" v-else>
+                    暂无数据
+                </div>
           </div>
       </div>
   </div>
@@ -182,37 +140,27 @@ export default {
   name: 'home',
   data () {
     return {
-      search: {
-        date: ''
+      lineChart: {
+        date: '',
+        type: 0,
+        instance: null
       },
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      value: ''
+      typeList: [{ value: 0, label: '比中预警' }, { value: 1, label: '人员信息' }],
+      barChart: {
+        date: '',
+        type: 0,
+        instance: null
+      },
+      warningList: [],
+      peopleList: []
     }
   },
   components: {
     Timeline,
     TimelineItem
+  },
+  created () {
+    this.getPageData()
   },
   mounted () {
     this.$nextTick(function () {
@@ -223,10 +171,103 @@ export default {
     })
   },
   methods: {
+    watchWindow (chart) {
+      window.onresize = () => {
+        setTimeout(() => {
+          if (this.lineChart.instance && this.barChart.instance) {
+            this.lineChart.instance.resize()
+            this.barChart.instance.resize()
+          }
+        }, 100)
+      }
+    },
+    /**
+     * @description 获取页面数据
+     */
+    getPageData () {
+      this.getLineChartData()
+      this.getBarChartData()
+      this.getWarningData()
+      this.getPeopleData()
+    },
+    /**
+     * @description 获取折现图数据
+     */
+    getLineChartData () {
+      const param = {}
+      param.type  = this.lineChart.type
+      if (this.lineChart.date) {
+        const times     = this.lineChart.date.split('-')
+        param.startDate = times[0]
+        param.endDate   = times[1]
+      }
+      this.$apis.home.getLineChartData(param)
+        .then((res) => {
+          console.log(res)
+        }).catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
+    },
+    /**
+     * @description 获取柱状图数据
+     */
+    getBarChartData () {
+      const param = {}
+      param.type  = this.lineChart.type
+      this.$apis.home.getBarChartData(param)
+        .then((res) => {
+          console.log(res)
+        }).catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
+    },
+    /**
+     * @description 获取最新预警数据
+     */
+    getWarningData () {
+      this.$apis.home.getWarningData({})
+        .then((res) => {
+          if (res.code == '0000') {
+            this.warningList = res.data
+          }
+        }).catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
+    },
+    /**
+     * @description 获取最新人员信息数据
+     */
+    getPeopleData () {
+      this.$apis.home.getPeopleData({})
+        .then((res) => {
+          if (res.code == '0000') {
+            this.peopleList = res.data
+          }
+        }).catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
+    },
+    /**
+     * @description echarts 图表绘制
+     */
     drawLineChart (ref, option) {
-      var myChart = echarts.init(this.$refs[ref])
+      const myChart  = echarts.init(this.$refs[ref])
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option)
+      if (ref == 'home-chart-top') {
+        this.lineChart.instance = myChart
+      } else {
+        this.barChart.instance = myChart
+      }
+      this.watchWindow()
     },
     showTopChart () {
       const option = {
@@ -358,6 +399,7 @@ export default {
 $radius = 6px;
 
 .home-container-item {
+    width 100%;
     display: flex;
     max-width: 1400px;
     margin: 0 auto;
@@ -372,6 +414,8 @@ $radius = 6px;
 }
 
 .home-item-right {
+    width 380px;
+    min-width 380px;
     padding: 15px;
     padding-bottom: 0;
     border-radius: $radius;
@@ -392,6 +436,10 @@ $radius = 6px;
 }
 
 .timeline-content {
+    width 100%;
+    overflow hidden
+    white-space:nowrap
+    text-overflow:ellipsis
     padding: 0;
     margin: 0;
     font-family: MicrosoftYaHei;
@@ -456,4 +504,6 @@ $radius = 6px;
     width: 100%;
     height: 300px;
 }
+.home-item-nodata
+    color #999
 </style>

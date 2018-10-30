@@ -28,8 +28,8 @@ export default {
     set (state, info) {
       // store 赋值
       state.info = info
-      state.token = info.token
-      sessionStorage.setItem('token', info.token)
+      state.token = info.userId
+      sessionStorage.setItem('token', info.userId)
       sessionStorage.setItem('userInfo', JSON.stringify(info))
     },
 

@@ -3,7 +3,7 @@
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
  * @LastEditTime: 2018-09-10 19:26:49
- * @Description: 预警模块接口
+ * @Description: 人员信息模块接口
  * @Email: zlf@zuolongfei.me
  */
 
@@ -18,7 +18,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getPageList = options => {
-  const url = '/warningMatch/pageList'
+  const url = '/personMatch/pageList'
   const params = {
     pageNum: options.page,
     pageSize: 10,
@@ -34,7 +34,7 @@ const getPageList = options => {
  * @description 获取分类数据
  */
 const getCateCount = options => {
-  const url = '/warningMatch/totalCount'
+  const url = '/personMatch/totalCount'
   return $request.post(url, {})
 }
 

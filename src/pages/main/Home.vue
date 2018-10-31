@@ -71,17 +71,6 @@
                     派出所辖区比中数据数量/派出所
                 </div>
                 <div class="home-item-search">
-                    <el-date-picker
-                        class="home-search-date"
-                        v-model="barChart.date"
-                        size="mini"
-                        type="daterange"
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        range-separator="至"
-                        start-placeholder="起始时间"
-                        end-placeholder="结束时间">
-                    </el-date-picker>
                     <el-select v-model="barChart.type" size="mini" class="home-search-select" placeholder="请选择分类">
                             <el-option
                             v-for="item in typeList"
@@ -197,9 +186,8 @@ export default {
       const param = {}
       param.type  = this.lineChart.type
       if (this.lineChart.date) {
-        const times     = this.lineChart.date.split('-')
-        param.startDate = times[0]
-        param.endDate   = times[1]
+        param.startDate = this.lineChart.date[0]
+        param.endDate   = this.lineChart.date[1]
       }
       this.$apis.home.getLineChartData(param)
         .then((res) => {

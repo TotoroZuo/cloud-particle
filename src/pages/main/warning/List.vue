@@ -1,5 +1,5 @@
 /*
- * @Description: 后台用户管理
+ * @Description: 预警
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
@@ -37,7 +37,6 @@
             <el-table-column
                 label="序号"
                 width="60"
-                align="center"
             >
                 <template slot-scope="props">
                     {{props.$index + 1}}
@@ -57,7 +56,7 @@
             <el-table-column
                 label="预警类型"
                 align="center"
-                prop="matchType">
+                prop="matchTypeString">
             </el-table-column>
             <el-table-column
                 label="数据来源"
@@ -89,23 +88,14 @@
             :total="total">
             </el-pagination>
         </div>
-        <!-- 用户添加编辑组件 -->
-        <user-dialog :open.sync="openDialog"  :type.sync="dialogType" />
     </div>
 </template>
 <script>
-import userDialog from '@/pages/main/system/users/Dialog.vue' // 添加组件
-import avator from '@/components/Avator.vue' // 头像组件
+
 export default {
-  name: 'usersList',
-  components: {
-    userDialog,
-    avator
-  },
+  name: 'warningList',
   data () {
     return {
-      openDialog: false,
-      dialogType: 'add',
       search: '',
       cateType: 0,
       curPage: 1,
@@ -119,19 +109,7 @@ export default {
         xdzt: 0, // 吸毒在逃
         ffcs: 0 // 非法出所
       },
-      dataList: [
-        {
-          uid: 'aaa',
-          num: 1,
-          name: '做龙飞',
-          idcard: '410123198912115050',
-          type: '涉案在逃',
-          origin: '房屋租赁登记',
-          hit: '全国打防控',
-          hitTime: '2018-10-27 19:25:59'
-        }
-      ],
-      multipleSelection: []
+      dataList: []
     }
   },
   created () {
@@ -139,6 +117,9 @@ export default {
     this.getCateCount()
   },
   methods: {
+    /**
+     * @description 获取列表数据
+     */
     getPageList () {
       const param = {
         page: this.curPage,
@@ -158,6 +139,9 @@ export default {
           }
         })
     },
+    /**
+     * @description 获取分类数量数据
+     */
     getCateCount () {
       this.$apis.warning.getCateCount({})
         .then(res => {
@@ -170,48 +154,19 @@ export default {
           }
         })
     },
+    /**
+     * @description 改变页码
+     */
     handleCurrentChange (val) {
       this.curPage = val
       this.getPageList()
-    },
-    showEditorUser () {
-      this.dialogType = 'editor'
-      const userInfo = {
-        uid: 'aaa',
-        account: 'sssss',
-        password: 'sssssss',
-        avator: '',
-        org: 'org1',
-        role: [],
-        name: '做龙飞',
-        enable: true,
-        phone: '',
-        idcard: '',
-        isSuper: false
-      }
-      this.$store.commit('options/setSelectUser', userInfo)
-      if (this.openDialog) {
-        this.openDialog = false
-      }
-      this.openDialog = true
-    },
-    showAddUser () {
-      this.dialogType = 'add'
-      if (this.openDialog) {
-        this.openDialog = false
-      }
-      this.openDialog = true
-    },
-    showDetail (row) {
-      this.$refs.userList.toggleRowExpansion(row)
     }
+
   }
 }
 </script>
 <style lang="stylus" scoped>
-.global-list-container
-    padding 15px
-    border-radius: 6px;
+
 >>>.search-left .el-radio-button
     margin-right 10px;
 >>>.search-left .el-radio-button__inner
@@ -223,15 +178,8 @@ export default {
     width 300px;
     margin-top:20px;
 .search-container
-    padding 15px
-    // border: 1px solid #ebeef5;
-    // border-bottom none
-.search-container:after
-    content ''
-    display block
-    height 0
-    width 100%
-    clear both
+    padding-bottom 15px;
+
 .single-add
     margin-right 15px
 .pagination-wrap

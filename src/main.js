@@ -4,8 +4,8 @@ import App from './App.vue'
 import router from './router/'
 import store from './store/'
 import apis from '@/apis/'
-
-// Vue.use(ElementUI)
+import common from '@/libs/common-methods.js'
+Vue.use(common) // 安装公共方法
 Vue.use(apis) // 安装接口
 
 Vue.config.productionTip = false

@@ -1,5 +1,5 @@
 /*
- * @Description: 后台用户管理
+ * @Description: 数据统计管理
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
@@ -11,231 +11,201 @@
     <div class="global-list-container royal-paper royal-paper-1">
         <div class="search-container">
             <div class="search-left">
-                <el-radio-group v-model="radio5" size="small">
-                    <el-radio-button label="分局"></el-radio-button>
-                    <el-radio-button label="派出所"  ></el-radio-button>
-                    <el-radio-button label="警务室"></el-radio-button>
+                <el-radio-group v-model="cateType" size="small" @change="getPageList">
+                    <el-radio-button :label="1">分局</el-radio-button>
+                    <el-radio-button :label="2">派出所</el-radio-button>
+                    <el-radio-button :label="3">警务室</el-radio-button>
                 </el-radio-group>
-
-                <el-button type="primary" size="mini" style="float:right;">导出表格</el-button>
+                <el-dropdown size="small" split-button type="primary" trigger="click" style="float:right;margin-left:15px;" @visible-change="clearTempOptions">
+                配置数据项
+                <el-dropdown-menu  slot="dropdown" >
+                    <el-scrollbar wrap-class="option-group-wrap" >
+                        <el-checkbox-group v-model="selectOptionsTempKeys" class="optionGroup" size="small" >
+                            <el-checkbox :label="item.name" v-for="(item,index) in optionsList" :key="item.name" :disabled="!index ? true : false">{{item.value}}</el-checkbox>
+                        </el-checkbox-group>
+                    </el-scrollbar>
+                    <el-button type="text" class="do-option-select" @click="doOptionSelect">确定</el-button>
+                </el-dropdown-menu>
+                </el-dropdown>
+                <el-button type="primary" size="small" style="float:right;" @click="doExport">导出表格</el-button>
             </div>
             <div class="search-right">
                 <el-date-picker
                     class="statistics-search-date"
                     size="mini"
-                    v-model="search.date"
+                    v-model="selectDate"
                     type="daterange"
                     format="yyyy-MM-dd"
                     value-format="yyyy-MM-dd"
+                    @clear="getPageList"
                     range-separator="至"
                     start-placeholder="起始时间"
                     end-placeholder="结束时间">
                 </el-date-picker>
-                <el-select v-model="value" class="statistics-search-select" size="mini" placeholder="数据配置项">
-                        <el-option
-                        label="全部"
-                        value="all">
-                        </el-option>
-                        <el-option
-                        label="配置一"
-                        value="一">
-                        </el-option>
-                </el-select>
             </div>
 
         </div>
         <div class="list-wrap">
+
              <el-table
-            :data="tableData"
-            @selection-change="handleSelectionChange"
-            ref="userList"
+            :data="dataList"
+            class="statisticsList-table"
             style="width: 100%">
-            <el-table-column
-                label="序号"
-                width="60"
-                align="center"
-            >
-                <template slot-scope="props">
-                    {{props.$index + 1}}
-                </template>
-            </el-table-column>
-            <el-table-column
-                label="分局名称"
-                align="center"
-                prop="name"
+                <el-table-column
+                    label="序号"
+                    width="60"
                 >
-            </el-table-column>
-            <el-table-column
-                label="接入派出所"
-                align="center"
-                sortable
-                prop="jrpcs">
-            </el-table-column>
-            <el-table-column
-                label="接入警务室"
-                align="center"
-                sortable
-                prop="jrjws">
-            </el-table-column>
-            <el-table-column
-                label="民警端用户"
-                align="center"
-                sortable
-                prop="mjdyh">
-            </el-table-column>
-            <el-table-column
-                label="群众端用户"
-                sortable
-                prop="qzdyh">
-            </el-table-column>
-            <el-table-column
-                label="无证住宿"
-                sortable
-                prop="wzzs">
-            </el-table-column>
+                    <template slot-scope="props">
+                        {{props.$index + 1}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="组织名称"
+                    min-width="100"
+                    align="center"
+                    prop="org">
+                </el-table-column>
+                <el-table-column v-for="el in optionsList" :key="el.name" v-if="selectOptionsKeys.includes(el.name)"
+                    :label="el.value"
+                    align="center"
+                    min-width="130"
+                    sortable
+                    :prop="el.name"
+                    >
+                </el-table-column>
 
-            <el-table-column
-                label="企事业单位"
-                sortable
-                prop="qsydw">
-            </el-table-column>
-            <el-table-column
-                label="房屋"
-                sortable
-                prop="fw">
-            </el-table-column>
-            <el-table-column
-                label="线索爆料"
-                sortable
-                prop="xsbl">
-            </el-table-column>
-            <el-table-column
-                label="暂住申报"
-                sortable
-                prop="zzsb">
-            </el-table-column>
-        </el-table>
-
+            </el-table>
         </div>
-        <div class="pagination-wrap">
+        <div class="pagination-wrap" v-if="total">
             <el-pagination
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage4"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
+            :current-page="curPage"
+            :page-size="10"
             layout="total,prev, pager, next, jumper"
-            :total="400">
+            :total="total">
             </el-pagination>
         </div>
-        <!-- 用户添加编辑组件 -->
-        <user-dialog :open.sync="openDialog"  :type.sync="dialogType" />
+
     </div>
 </template>
 <script>
-import userDialog from '@/pages/main/system/users/Dialog.vue' // 添加组件
-import avator from '@/components/Avator.vue' // 头像组件
+
 export default {
-  name: 'usersList',
-  components: {
-    userDialog,
-    avator
-  },
+  name: 'statisticsList',
   data () {
     return {
-      search: {
-        date: ''
-      },
-      value: '',
-      openDialog: false,
-      dialogType: 'add',
-      checkedList: [],
-      radio5: '',
-      select: '',
-      input5: '',
-      currentPage4: 1,
-      tableData5: [],
-      tableData: [
-        {
-          uid: 'aaa',
-          num: 1,
-          name: '做龙飞',
-          jrpcs: 10,
-          jrjws: '100',
-          mjdyh: 1000,
-          qzdyh: 10000,
-          wzzs: 50000,
-          qsydw: 1500,
-          fw: 500,
-          xsbl: 65000,
-          zzsb: 1000
-        },
-        {
-          uid: 'aaa',
-          num: 1,
-          name: '做龙飞',
-          jrpcs: 10,
-          jrjws: '100',
-          mjdyh: 1000,
-          qzdyh: 10000,
-          wzzs: 50000,
-          qsydw: 1500,
-          fw: 500,
-          xsbl: 65000,
-          zzsb: 1000
-        }
-      ],
-      multipleSelection: []
+      search: '',
+      selectDate: null,
+      cateType: 1,
+      curPage: 1,
+      total: 0,
+      dataList: [],
+      selectOptions: [], // 选中数据项
+      selectOptionsKeys: [], // 选中数据想索引
+      selectOptionsTempKeys: [], // 选中数据临时索引
+      optionsList: [] // 配置项列表
     }
   },
+  created () {
+    this.getConfigList()
+    this.getPageList()
+  },
   methods: {
-    handleSelectionChange (val) {
-      console.log(val)
-      this.checkedList = val
+    /**
+     * @description 获取配置项数据
+     */
+    getConfigList () {
+      this.$apis.statistics.getConfigList({})
+        .then(res => {
+          if (res.code == '0000') {
+            this.optionsList = res.data
+            const keys = []
+            let defaultKeys = []
+            res.data.forEach(element => {
+              keys.push(element.name)
+            })
+            defaultKeys = keys.splice(0, 7)
+            this.selectOptionsKeys = defaultKeys
+            this.selectOptionsTempKeys = [...defaultKeys]
+          }
+        })
+        .catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
     },
-    handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+    /**
+     * @description 获取列表数据
+     */
+    getPageList () {
+      const param = {
+        page: this.curPage,
+        matchType: this.cateType
+      }
+      if (this.selectDate) {
+        param.startDate = this.selectDate[0]
+        param.endDate   = this.selectDate[1]
+      }
+      this.$apis.statistics.getPageList(param)
+        .then(res => {
+          if (res.code == '0000') {
+            this.total = res.count
+            this.dataList = res.data
+          }
+        })
+        .catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
     },
+    /**
+     * @description 改变页码
+     */
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      this.curPage = val
+      this.getPageList()
     },
-    showEditorUser () {
-      this.dialogType = 'editor'
-      const userInfo = {
-        uid: 'aaa',
-        account: 'sssss',
-        password: 'sssssss',
-        avator: '',
-        org: 'org1',
-        role: [],
-        name: '做龙飞',
-        enable: true,
-        phone: '',
-        idcard: '',
-        isSuper: false
-      }
-      this.$store.commit('options/setSelectUser', userInfo)
-      if (this.openDialog) {
-        this.openDialog = false
-      }
-      this.openDialog = true
+    doOptionSelect () {
+      this.selectOptionsKeys = [...this.selectOptionsTempKeys]
     },
-    showAddUser () {
-      this.dialogType = 'add'
-      if (this.openDialog) {
-        this.openDialog = false
+    clearTempOptions (val) {
+      console.log(val)
+      if (!val) {
+        this.selectOptionsTempKeys = [...this.selectOptionsKeys]
       }
-      this.openDialog = true
     },
-    showDetail (row) {
-      this.$refs.userList.toggleRowExpansion(row)
+    doExport () {
+      const param = {}
+      if (this.selectDate) {
+        param.startDate = this.selectDate[0]
+        param.endDate   = this.selectDate[1]
+      }
+      this.$apis.statistics.doExport(param)
+        .then(res => {
+          console.log(res)
+          if (res.code == '0000') {
+            this.$common.openDownLoadLink(res.data, true)
+          }
+        })
+        .catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
+    }
+
+  },
+  watch: {
+    selectDate (val) {
+      this.getPageList()
     }
   }
 }
 </script>
 <style lang="stylus" scoped>
-.user-list-container
-    padding 15px
+
 >>>.search-left .el-radio-button
     margin-right 10px;
 >>>.search-left .el-radio-button__inner
@@ -246,21 +216,12 @@ export default {
 .search-right
     margin-top:20px;
 .search-container
-    padding 15px
-    border: 1px solid #ebeef5;
-    border-bottom none
-.search-container:after
-    content ''
-    display block
-    height 0
-    width 100%
-    clear both
+    padding-bottom 15px
+
 .single-add
     margin-right 15px
 .pagination-wrap
     padding 15px 0
-    border: 1px solid #ebeef5;
-    border-top none
 
 .statistics-search-date {
     border-top: none;
@@ -272,18 +233,32 @@ export default {
 >>>.statistics-search-date.el-range-editor.el-input__inner
     padding 3px 0;
 
-.statistics-search-select {
-    width: 100px;
+>>>.option-group-wrap
+    max-height 300px;
+>>>.optionGroup
+    padding 15px;
+>>>.optionGroup .el-checkbox
+    display  block
+    padding 10px 0
+>>>.optionGroup .el-checkbox+.el-checkbox
+    margin-left 0
+.statisticsList-table-wrap
+    width 100%
+//*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+>>>.statisticsList-table  .el-table__body-wrapper::-webkit-scrollbar {
+    width:7px; height:10px!important;
+    background-color:transparent!important;
+    }
+ /*定义滚动条轨道 内阴影+圆角*/
+>>>.statisticsList-table .el-table__body-wrapper::-webkit-scrollbar-track {
+    background-color:#f0f6ff!important;
 }
-
->>>.statistics-search-select .el-input {
-    width: auto;
+/*定义滑块 内阴影+圆角*/
+>>>.statisticsList-table  .el-table__body-wrapper::-webkit-scrollbar-thumb {
+    background-color:#73abb1!important;
+     border-radius:6px!important;
 }
-
->>>.statistics-search-select .el-input__inner {
-    border-top: none;
-    border-right: none;
-    border-left: none;
-}
-
+.do-option-select
+    float right
+    margin-right 15px
 </style>

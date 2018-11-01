@@ -1,4 +1,5 @@
-const BASE_URL = 'http://localhost:8084'
+import config from '../config.js'
+const BASE_URL = config.baseUrl
 const $common = {
   openDownLoadLink (url, BASE) {
     const linkForm = document.getElementById('open-link-form')

@@ -27,7 +27,7 @@
                     <el-button type="text" class="do-option-select" @click="doOptionSelect">确定</el-button>
                 </el-dropdown-menu>
                 </el-dropdown>
-                <el-button type="primary" size="small" style="float:right;" @click="doExport">导出表格</el-button>
+                <el-button type="primary" size="small" style="float:right;" @click="doExport" :disabled="importing">导出表格</el-button>
             </div>
             <div class="search-right">
                 <el-date-picker
@@ -100,6 +100,7 @@ export default {
       curPage: 1,
       total: 0,
       dataList: [],
+      importing: false, // 导入状态
       selectOptions: [], // 选中数据项
       selectOptionsKeys: [], // 选中数据想索引
       selectOptionsTempKeys: [], // 选中数据临时索引
@@ -182,14 +183,20 @@ export default {
         param.startDate = this.selectDate[0]
         param.endDate   = this.selectDate[1]
       }
+      if (this.importing) {
+        return false
+      }
+      this.importing = true
       this.$apis.statistics.doExport(param)
         .then(res => {
           console.log(res)
           if (res.code == '0000') {
             this.$common.openDownLoadLink(res.data, true)
           }
+          this.importing = false
         })
         .catch(error => {
+          this.importing = false
           if (error) {
             console.log(error)
           }

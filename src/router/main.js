@@ -63,7 +63,7 @@ const frameIn = [
           icon: 'dashboard',
           requiresAuth: true
         },
-        component: () => import('@/pages/main/imports/List.vue')
+        component: () => import('@/pages/main/Import.vue')
       },
       {
         path: 'setting',
@@ -74,7 +74,7 @@ const frameIn = [
           icon: 'dashboard',
           requiresAuth: true
         },
-        component: () => import('@/pages/main/setting/List.vue')
+        component: () => import('@/pages/main/setting/Setting.vue')
       },
       {
         path: 'ua',

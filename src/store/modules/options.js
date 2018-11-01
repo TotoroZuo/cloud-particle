@@ -17,7 +17,9 @@ export default {
     // 当前选择菜单信息
     selectMenu: {},
     // 当前选择api信息
-    selectApi: {}
+    selectApi: {},
+    // 配置-选择当前用户
+    selectSettingUser: {}
   },
   mutations: {
 
@@ -26,6 +28,12 @@ export default {
     */
     setSelectUser (state, info) {
       state.selectUser = info
+    },
+    /**
+    * [setSelect description] 设置当前选中人员信息
+    */
+    setSelectSettingUser (state, info) {
+      state.selectSettingUser = info
     },
     /**
     * [setSelect description] 设置当前选中人员信息

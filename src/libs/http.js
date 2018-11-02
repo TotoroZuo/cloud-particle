@@ -52,7 +52,6 @@ function checkStatus (response) {
     data = response.data
   }
   //   根据返回的code值来做不同的处理（和后端约定）
-  console.log(data)
   switch (data.code) {
     case '9998': // 登录过期
       store.commit('user/clear')

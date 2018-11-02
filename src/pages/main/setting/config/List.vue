@@ -50,7 +50,7 @@
 
             <el-table-column label="操作" width="100" align="center">
                  <template slot-scope="props">
-                     <el-button type="text" size="small" title="编辑用户">详情</el-button>
+                     <el-button type="text" size="small" title="编辑策略" @click="showEditorMessage(props.row)">编辑</el-button>
                  </template>
             </el-table-column>
         </el-table>
@@ -65,17 +65,24 @@
             :total="total">
             </el-pagination>
         </div>
+        <settingConfigDialog :open.sync="openDialog"  :type.sync="dialogType" @change="getPageList"/>
     </div>
 </template>
 <script>
+import settingConfigDialog from './Dialog.vue' // 添加组件
 export default {
   name: 'settingConfigList',
+  components: {
+    settingConfigDialog
+  },
   data () {
     return {
       search: '',
       curPage: 1,
       total: 0,
-      dataList: []
+      dataList: [],
+      openDialog: false,
+      dialogType: 'add'
     }
   },
   created () {
@@ -109,6 +116,20 @@ export default {
     handleCurrentChange (val) {
       this.curPage = val
       this.getPageList()
+    },
+    showEditorMessage (userData) {
+      this.dialogType = 'editor'
+      const configInfo = {
+        policyConfigId: userData.policyConfigId,
+        policyConfigName: userData.policyConfigName,
+        policyCondition: userData.policyCondition,
+        policyConfigCondition: userData.policyConfigCondition ? JSON.parse(userData.policyConfigCondition) : [{ compare: '大于等于', data: 0, logic: '或' }]
+      }
+      this.$store.commit('options/setSelectSettingConfig', configInfo)
+      if (this.openDialog) {
+        this.openDialog = false
+      }
+      this.openDialog = true
     }
   }
 }

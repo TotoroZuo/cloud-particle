@@ -28,6 +28,25 @@ const getPageList = options => {
   return $request.post(url, params)
 }
 
+/**
+ * @description 添加编辑配置策略
+ * @param  {String} type add 添加 editor 编辑
+ *
+ * @param  {String} options.smsRuleId id
+ * @param  {String} options.smsUserName 姓名
+ * @param  {String} options.smsRuleTemplate 推送模块
+ * @param  {String} options.smsUserOrg 组织部门
+ * @param  {String} options.smsUserPhone 手机号
+ */
+
+const addEditorUser = (options, type) => {
+  const url = type == 'add' ? '/policyConfig/add' : '/policyConfig/update'
+  const params = { ...options }
+  params.policyConfigCondition = JSON.stringify(params.policyConfigCondition)
+  return $request.post(url, params)
+}
+
 export default {
-  getPageList
+  getPageList,
+  addEditorUser
 }

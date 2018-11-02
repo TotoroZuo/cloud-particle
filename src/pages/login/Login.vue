@@ -87,6 +87,7 @@ export default {
         .then((res) => {
           if (res.code !== '0000') {
             this.errMsg = res.data
+            this.loginDoing = false
             return false
           }
           // 更改 Vuex 用户状态
@@ -105,7 +106,7 @@ export default {
         })
         .catch((error) => {
           console.log(error)
-          this.loginDoing = true
+          this.loginDoing = false
         })
     }
   },

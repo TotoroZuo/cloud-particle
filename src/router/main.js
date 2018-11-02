@@ -33,6 +33,17 @@ const frameIn = [
         component: () => import('@/pages/main/warning/List.vue')
       },
       {
+        path: 'warning/:id',
+        name: 'warningDetail',
+        meta: {
+          title: 'warningDetail',
+          name: '预警详情',
+          icon: 'dashboard',
+          requiresAuth: true
+        },
+        component: () => import('@/pages/main/warning/Detail.vue')
+      },
+      {
         path: 'people',
         name: 'people',
         meta: {
@@ -42,6 +53,17 @@ const frameIn = [
           requiresAuth: true
         },
         component: () => import('@/pages/main/people/List.vue')
+      },
+      {
+        path: 'people/:id',
+        name: 'peopleDetail',
+        meta: {
+          title: 'peopleDetail',
+          name: '人员信息详情',
+          icon: 'dashboard',
+          requiresAuth: true
+        },
+        component: () => import('@/pages/main/people/Detail.vue')
       },
       {
         path: 'statistics',

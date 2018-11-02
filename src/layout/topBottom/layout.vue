@@ -23,7 +23,7 @@
                                    <span class="accountName">{{userInfo.name}}</span>
                                 </a>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item>修改密码</el-dropdown-item>
+                                    <el-dropdown-item @click.native="showChangePassword">修改密码</el-dropdown-item>
                                     <el-dropdown-item divided @click.native="doLogout">退出登陆</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -43,6 +43,26 @@
             <el-footer class="layout-footer" height="40px">
                 © {{curYear}} <a href="https://github.com/TotoroZuo/royal-admin">{{copyRight}}</a>
             </el-footer>
+            <el-dialog title="修改密码" :visible.sync="dialogOpen"   width="300px">
+                <div class="user-dialog-body">
+                    <el-form ref="passwordForm" :model="password" :rules="changeRules" label-width="70px"  label-position='left' size="small">
+                        <el-form-item label="旧密码" prop="old">
+                            <el-input v-model="password.old" placeholder="登录密码为6-10个字符"></el-input>
+                        </el-form-item>
+                        <el-form-item label="新密码" prop="new">
+                            <el-input v-model="password.new" placeholder="设置新密码"></el-input>
+                        </el-form-item>
+                        <el-form-item label="确认密码" prop="again">
+                            <el-input v-model="password.again" placeholder="重复新密码"></el-input>
+                        </el-form-item>
+                        <el-form-item style="margin-bottom:0;">
+                            <el-button type="primary" @click="onSubmit">提交</el-button>
+                            <el-button  @click="closeDialog">取消</el-button>
+                        </el-form-item>
+
+                    </el-form>
+                </div>
+            </el-dialog>
         </el-container>
 </template>
 
@@ -51,6 +71,7 @@ import setting from '@/config.js' // 配置文件
 import avator from '@/components/Avator.vue' // 头像组件
 import rootPath from '@/components/RouterPath.vue' // 当前路径
 import navs from './menuList.js' // 获取导航菜单信息
+import changeRules from './rules.js' // 校验修改密码输入
 const thisYear = new Date().getFullYear()
 
 export default {
@@ -62,7 +83,14 @@ export default {
   data () {
     return {
       navs,
+      password: {
+        old: '',
+        new: '',
+        again: ''
+      },
+      changeRules,
       menuOpen: false,
+      dialogOpen: false,
       copyRight: setting.copyRight,
       curYear: thisYear
     }
@@ -102,6 +130,46 @@ export default {
     // 处理点击菜单
     handleClickMenu (path) {
       this.$router.push({ path })
+    },
+    // 修改密码
+    showChangePassword () {
+      this.dialogOpen = true
+    },
+    closeDialog () {
+      this.dialogOpen = false
+    },
+    // 进行表单校验
+    onSubmit () {
+      this.$refs['passwordForm'].validate((valid) => {
+        if (valid) {
+          this.doSubmitData()
+        }
+      })
+    },
+    // 表单进行数据提交
+    doSubmitData () {
+      const params = { ...this.password }
+
+      this.$apis.user.changePassword(params)
+        .then(res => {
+          if (res.code == '0000') {
+            // 成功之后消息提醒
+            this.$notify({
+              message: res.data,
+              type: 'success',
+              position: 'top-right',
+              duration: 1000
+            })
+            this.doLogout()
+          } else {
+            this.$notify({
+              message: res.data,
+              type: 'error',
+              position: 'top-right',
+              duration: 1000
+            })
+          }
+        }).catch(err => console.log(err))
     }
   },
   computed: {

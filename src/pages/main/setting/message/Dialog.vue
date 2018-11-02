@@ -2,27 +2,22 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogOpen"   width="600px">
         <div class="user-dialog-body">
             <el-form ref="userForm" :model="userInfo" :rules="userRules" label-width="85px" label-position='right' size="small">
-                <el-form-item label="真实姓名" prop="userName" class="float-label">
-                    <el-input v-model="userInfo.userName" placeholder="请输入真实姓名"></el-input>
+                <el-form-item label="真实姓名" prop="smsUserName" class="float-label">
+                    <el-input v-model="userInfo.smsUserName" placeholder="请输入真实姓名"></el-input>
                 </el-form-item>
-                <el-form-item label="单位名称" prop="userOrgName" class="float-label">
-                    <el-select v-model="userInfo.userOrgName" class="selectOrg" placeholder="选择单位名称">
+                <el-form-item label="单位名称" prop="smsUserOrg" class="float-label">
+                    <el-select v-model="userInfo.smsUserOrg" class="selectOrg" placeholder="选择单位名称">
                      <el-option :label="item.orgName" :value="item.orgName" v-for="item in orgList" :key="'org_'+item.orgName"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="手机号码" prop="userPhone" class="float-label">
-                    <el-input v-model="userInfo.userPhone" placeholder="请输入手机号码"></el-input>
+                <el-form-item label="手机号码" prop="smsUserPhone" class="float-label">
+                    <el-input v-model="userInfo.smsUserPhone" placeholder="请输入手机号码"></el-input>
                 </el-form-item>
-                <el-form-item label="账号类型" prop="userRole" class="float-label">
-                    <el-select v-model="userInfo.userRole" class="selectOrg" placeholder="选择账号类型">
-                        <el-option :label="item.name" :value="item.value" v-for="item in roleList" :key="'role_'+item.value"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="身份证号" prop="userIdCard" class="float-label">
-                    <el-input v-model="userInfo.userIdCard" placeholder="请输入身份证号"></el-input>
-                </el-form-item>
-                <el-form-item label="登陆密码" prop="userPassword" class="float-label">
-                    <el-input v-model="userInfo.userPassword" placeholder="请输入登陆密码"></el-input>
+                <div class="clear"></div>
+                <el-form-item label="推送模块" class="setting-message-rule" prop="smsRuleTemplate">
+                    <el-checkbox-group v-model="userInfo.smsRuleTemplate">
+                    <el-checkbox :label="String(item.smsTemplateId)" name="role" v-for="item in ruleList" :key="item.smsTemplateId">{{item.smsTemplateName}}</el-checkbox>
+                    </el-checkbox-group>
                 </el-form-item>
 
             </el-form>
@@ -39,25 +34,23 @@
 // 用户基本信息
 import userRules from './userRules.js'
 const userInfo = {
-  userId: '',
-  userName: '',
-  userPassword: '',
-  userRole: '',
-  userIdCard: '',
-  userOrgName: '',
-  userPhone: ''
+  smsRuleId: '',
+  smsUserName: '',
+  smsUserPhone: '',
+  smsRuleTemplate: [],
+  smsUserOrg: ''
 }
 // 默认传入的用户信息
 const defaultInfo = { ...userInfo }
 export default {
-  name: 'userDialog',
+  name: 'settingMessageDialog',
   data () {
     return {
       dialogOpen: false,
       userInfo,
       userRules,
       orgList: [],
-      roleList: []
+      ruleList: []
     }
   },
   props: {
@@ -71,15 +64,15 @@ export default {
     }
   },
   created () {
-    this.getRoleList()
+    this.getRuleList()
     this.getOrgList()
   },
   methods: {
     // 获取部门列表
-    getRoleList () {
-      this.$apis.settingUser.getRoleList().then(res => {
+    getRuleList () {
+      this.$apis.settingMessage.getRuleList().then(res => {
         if (res.code == '0000') {
-          this.roleList = res.data
+          this.ruleList = res.data
         }
       }).catch(error => {
         if (error) {
@@ -115,9 +108,9 @@ export default {
     doSubmitData () {
       const params = { ...this.userInfo }
       if (this.type == 'add') {
-        delete params['userId']
+        delete params['smsRuleId']
       }
-      this.$apis.settingUser.addEditorUser(params, this.type)
+      this.$apis.settingMessage.addEditorUser(params, this.type)
         .then(res => {
           if (res.code == '0000') {
             // 成功之后消息提醒
@@ -151,10 +144,10 @@ export default {
   },
   computed: {
     dialogTitle () {
-      return this.type === 'add' ? '新增账号' : '编辑账号'
+      return this.type === 'add' ? '新增规则' : '编辑规则'
     },
     selectInfo () {
-      return this.$store.state.options.selectSettingUser
+      return this.$store.state.options.selectSettingMessage
     }
   },
   watch: {
@@ -178,11 +171,8 @@ export default {
         this.userInfo = defaultInfo
       } else {
         this.userInfo = { ...this.selectInfo }
+        console.log(this.selectInfo)
       }
-    },
-    // 大小写转换
-    'userInfo.userIdCard' (val) {
-      this.userInfo.userIdCard = val.toUpperCase()
     }
   }
 }
@@ -195,6 +185,16 @@ export default {
 .float-label
     width 50%;
     float left ;
+
+>>> .el-checkbox+.el-checkbox {
+    margin-left: 0;
+}
+
+.el-checkbox {
+    width 110px;
+    padding-right: 10px;
+}
+
 >>> .el-select .el-input
     width 100%;
 </style>

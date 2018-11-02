@@ -28,6 +28,41 @@ const getPageList = options => {
   return $request.post(url, params)
 }
 
+/**
+ * @description 获取推送模块数据
+ */
+const getRuleList = options => {
+  const url = '/smsRule/templateList'
+  return $request.post(url, {})
+}
+
+/**
+ * @description 添加编辑规则信息
+ * @param  {String} type add 添加 editor 编辑
+ *
+ * @param  {String} options.smsRuleId id
+ * @param  {String} options.smsUserName 姓名
+ * @param  {String} options.smsRuleTemplate 推送模块
+ * @param  {String} options.smsUserOrg 组织部门
+ * @param  {String} options.smsUserPhone 手机号
+ */
+const addEditorUser = (options, type) => {
+  const url = type == 'add' ? '/smsRule/add' : '/smsRule/update'
+  const params = { ...options }
+  params.smsRuleTemplate = params.smsRuleTemplate.join(',')
+  return $request.post(url, params)
+}
+
+/**
+ * @description 更改账号状态
+ */
+const changeUserStatus = options => {
+  const url = '/smsRule/updateStatus'
+  return $request.post(url, { smsRuleId: options })
+}
 export default {
-  getPageList
+  getPageList,
+  getRuleList,
+  addEditorUser,
+  changeUserStatus
 }

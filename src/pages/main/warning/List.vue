@@ -73,7 +73,7 @@
             </el-table-column>
             <el-table-column label="操作" width="100" align="center">
                  <template slot-scope="props">
-                     <el-button type="text" size="small" title="编辑用户">详情</el-button>
+                     <el-button type="text" size="small" title="编辑用户" @click="showDetail(props.row.id)">详情</el-button>
                  </template>
             </el-table-column>
         </el-table>
@@ -160,6 +160,9 @@ export default {
     handleCurrentChange (val) {
       this.curPage = val
       this.getPageList()
+    },
+    showDetail (id) {
+      this.$router.push({ name: 'warningDetail', params: { id } })
     }
 
   }

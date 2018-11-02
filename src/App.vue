@@ -24,6 +24,13 @@ export default {
         this.$store.commit('user/refresh')
       }
     }
+  },
+  watch: {
+    '$route' (val) {
+      if (val) {
+        document.title = val.meta.name
+      }
+    }
   }
 }
 </script>

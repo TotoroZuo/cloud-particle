@@ -13,8 +13,9 @@
             <el-input placeholder="请输入人员姓名或身份证号" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
                     <el-button slot="append" icon="el-icon-search" @click="getPageList"></el-button>
             </el-input>
-
         </div>
+        <el-button type="primary" class="add-new-rule" size="small" @click="showAddMessage">新增规则</el-button>
+        <div class="clear"></div>
         <div class="list-wrap">
             <el-table
             :data="dataList"
@@ -59,7 +60,8 @@
             </el-table-column>
             <el-table-column label="操作" width="100" align="center">
                  <template slot-scope="props">
-                     <el-button type="text" size="small" title="编辑用户">详情</el-button>
+                     <el-button type="text" size="small" title="编辑用户" @click="showEditorMessage(props.row)">编辑</el-button>
+                     <el-button type="text" size="small" :title="props.row.smsRuleStatus ?'启用':'禁用'" @click="confirmChangeStatus(props.row.smsRuleId,props.row.smsRuleStatus)">{{props.row.smsRuleStatus ?'启用':'禁用'}}</el-button>
                  </template>
             </el-table-column>
         </el-table>
@@ -74,9 +76,11 @@
             :total="total">
             </el-pagination>
         </div>
+        <settingMessageDialog :open.sync="openDialog"  :type.sync="dialogType" @change="getPageList"/>
     </div>
 </template>
 <script>
+import settingMessageDialog from './Dialog.vue' // 添加组件
 export default {
   name: 'settingMessageList',
   data () {
@@ -84,8 +88,13 @@ export default {
       search: '',
       curPage: 1,
       total: 0,
-      dataList: []
+      dataList: [],
+      openDialog: false,
+      dialogType: 'add'
     }
+  },
+  components: {
+    settingMessageDialog
   },
   created () {
     this.getPageList()
@@ -118,6 +127,63 @@ export default {
     handleCurrentChange (val) {
       this.curPage = val
       this.getPageList()
+    },
+    showEditorMessage (userData) {
+      this.dialogType = 'editor'
+      const ruleInfo = {
+        smsRuleId: userData.smsRuleId,
+        smsUserName: userData.smsUserName,
+        smsUserPhone: userData.smsUserPhone,
+        smsRuleTemplate: userData.smsRuleTemplate ? userData.smsRuleTemplate.split(',') : [],
+        smsUserOrg: userData.smsUserOrg
+      }
+      this.$store.commit('options/setSelectSettingMessage', ruleInfo)
+      if (this.openDialog) {
+        this.openDialog = false
+      }
+      this.openDialog = true
+    },
+    showAddMessage () {
+      this.dialogType = 'add'
+      if (this.openDialog) {
+        this.openDialog = false
+      }
+      this.openDialog = true
+    },
+    confirmChangeStatus (id, status) {
+      const text = status ? '确定启用该规则?' : '确定禁用该规则?'
+      this.$confirm(text, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.changeUserStatus(id)
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
+    changeUserStatus (id) {
+      this.$apis.settingMessage.changeUserStatus(id).then(res => {
+        if (res.code == '0000') {
+          this.$notify({
+            message: res.data,
+            type: 'success',
+            position: 'top-right',
+            duration: 1000
+          })
+          this.getPageList()
+        } else {
+          this.$notify({
+            message: res.data,
+            type: 'error',
+            position: 'top-right',
+            duration: 1000
+          })
+        }
+      }).catch(err => console.log(err))
     }
   }
 }
@@ -125,9 +191,17 @@ export default {
 <style lang="stylus" scoped>
 
 .search-right
+    display inline-block
+    vertical-align bottom
     width 300px;
     margin-top:20px;
     padding-bottom 15px;
+    float left
+.add-new-rule
+    display inline-block
+    vertical-align bottom
+    float right
+    margin  15px 0
 
 .single-add
     margin-right 15px

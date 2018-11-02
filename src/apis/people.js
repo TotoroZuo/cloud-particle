@@ -38,7 +38,27 @@ const getCateCount = options => {
   return $request.post(url, {})
 }
 
+/**
+ * @description 获取详情
+ * @param  {String} options id
+ */
+const getDetail = options => {
+  const url = '/personMatch/detail'
+  return $request.post(url, { id: options })
+}
+/**
+ * @description 处理详情
+ * @param  {String} options.id id
+ * @param  {String} options.handleResult 处理结果
+ */
+const doHandle = options => {
+  const url = '/personMatch/handle'
+  return $request.post(url, options)
+}
+
 export default {
   getPageList,
-  getCateCount
+  getCateCount,
+  getDetail,
+  doHandle
 }

@@ -18,8 +18,12 @@ export default {
     selectMenu: {},
     // 当前选择api信息
     selectApi: {},
-    // 配置-选择当前用户
-    selectSettingUser: {}
+    // 配置用户-选择当前用户
+    selectSettingUser: {},
+    // 配置短信规则-选择当前规则
+    selectSettingMessage: {},
+    // 配置 配置策略-选择当前配置策略
+    selectSettingConfig: {}
   },
   mutations: {
 
@@ -34,6 +38,18 @@ export default {
     */
     setSelectSettingUser (state, info) {
       state.selectSettingUser = info
+    },
+    /**
+    * [setSelect description] 设置当前选中规则信息
+    */
+    setSelectSettingMessage (state, info) {
+      state.selectSettingMessage = info
+    },
+    /**
+    * [setSelect description] 设置当前选中配置策略
+    */
+    setSelectSettingConfig (state, info) {
+      state.selectSettingConfig = info
     },
     /**
     * [setSelect description] 设置当前选中人员信息

@@ -127,11 +127,29 @@ const enableUser = options => {
   }
   return $request.post(url, params)
 }
+
+/**
+ * @description 禁用启用用户接口
+ * @param  {String} options.uid 用户ID
+ * @param  {Boolean} options.enable 用户ID
+ * @return {Object} 接口返回数据
+ */
+
+const changePassword = options => {
+  const url = '/user/changePassword'
+  const params = {
+    oldPassword: options.old,
+    newPassword: options.new,
+    rePassword: options.again
+  }
+  return $request.post(url, params)
+}
 export default {
   doLogin,
   doLogout,
   addUser,
   editorUser,
   delUser,
-  enableUser
+  enableUser,
+  changePassword
 }

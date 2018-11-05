@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-05 15:31:57
  * @Email: zlf@zuolongfei.me
  */
 
@@ -66,7 +66,7 @@
         </div>
         <div class="detail-box-subtitle">
             <span>比中结果</span>
-            <span class="patch-type">上门调查</span>
+            <span class="patch-type">{{matchTypeString}}</span>
             <span>
                  <el-button type="primary" size="mini" @click="doHandle">处理</el-button>
             </span>
@@ -120,6 +120,7 @@ export default {
   data () {
     return {
       matchType: '',
+      matchTypeString: '',
       // 上门调查
       info: {
         template: '',
@@ -158,6 +159,7 @@ export default {
             this.total = res.count
             this.dataList = res.data.tracks
             this.matchType = res.data.matchType
+            this.matchTypeString = res.data.matchTypeString
             this.info = res.data.base
           }
         })

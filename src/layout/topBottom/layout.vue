@@ -41,7 +41,7 @@
                  </el-scrollbar>
             </el-main>
             <el-footer class="layout-footer" height="40px">
-                © {{curYear}} <a href="https://github.com/TotoroZuo/royal-admin">{{copyRight}}</a>
+                © {{curYear}} <a href="#">{{copyRight}}</a>
             </el-footer>
             <el-dialog title="修改密码" :visible.sync="dialogOpen"   width="300px">
                 <div class="user-dialog-body">
@@ -174,7 +174,7 @@ export default {
   },
   computed: {
     activeMenu () {
-      return this.$route.path
+      return this.$route.meta.router
     },
     userInfo () {
       return this.$store.state.user.info

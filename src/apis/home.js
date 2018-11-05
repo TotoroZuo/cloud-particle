@@ -2,7 +2,7 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-30 11:56:14
+ * @LastEditTime: 2018-11-05 11:19:22
  * @Description: 首页模块接口
  * @Email: zlf@zuolongfei.me
  */
@@ -17,7 +17,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getLineChartData = options => {
-  const url = '/statistics/countByDate'
+  const url = '/statistics/countByDate2'
 
   const params = {
     type: Number(options.type)

@@ -14,11 +14,12 @@
                         type="daterange"
                         format="yyyy-MM-dd"
                         value-format="yyyy-MM-dd"
+                        @change="getLineChartData"
                         range-separator="至"
                         start-placeholder="起始时间"
                         end-placeholder="结束时间">
                     </el-date-picker>
-                    <el-select v-model="lineChart.type" size="mini" class="home-search-select" placeholder="请选择分类">
+                    <el-select v-model="lineChart.type" size="mini" class="home-search-select" @change="getLineChartData" placeholder="请选择分类">
                         <el-option
                             v-for="item in typeList"
                             :key="item.value"
@@ -71,7 +72,7 @@
                     派出所辖区比中数据数量/派出所
                 </div>
                 <div class="home-item-search">
-                    <el-select v-model="barChart.type" size="mini" class="home-search-select" placeholder="请选择分类">
+                    <el-select v-model="barChart.type" size="mini" @change="getBarChartData" class="home-search-select" placeholder="请选择分类">
                             <el-option
                             v-for="item in typeList"
                             :key="item.value"
@@ -154,8 +155,8 @@ export default {
   mounted () {
     this.$nextTick(function () {
       setTimeout(() => {
-        this.showTopChart()
-        this.showBottomChart()
+        this.getLineChartData()
+        this.getBarChartData()
       }, 100)
     })
   },
@@ -174,8 +175,6 @@ export default {
      * @description 获取页面数据
      */
     getPageData () {
-      this.getLineChartData()
-      this.getBarChartData()
       this.getWarningData()
       this.getPeopleData()
     },
@@ -191,7 +190,9 @@ export default {
       }
       this.$apis.home.getLineChartData(param)
         .then((res) => {
-          console.log(res)
+          if (res.code == '0000') {
+            this.showTopChart(res.data)
+          }
         }).catch(error => {
           if (error) {
             console.log(error)
@@ -203,10 +204,12 @@ export default {
      */
     getBarChartData () {
       const param = {}
-      param.type  = this.lineChart.type
+      param.type  = this.barChart.type
       this.$apis.home.getBarChartData(param)
         .then((res) => {
-          console.log(res)
+          if (res.code == '0000') {
+            this.showBottomChart(res.data)
+          }
         }).catch(error => {
           if (error) {
             console.log(error)
@@ -257,14 +260,33 @@ export default {
       }
       this.watchWindow()
     },
-    showTopChart () {
+    showTopChart (data) {
+      if (!data) {
+        return false
+      }
+      const colors = ['#4A9BFD', '#E95F45', '#01A292', '#FA9857', '#6BB7F3', '#23B6AE']
+      const horizontal = data.key
+      const values = data.value
+      let vertical = []
+      values[0].forEach(e => {
+        const verticalItem = {
+          name: e.name,
+          type: 'line',
+          smooth: true,
+          symbolSize: 6,
+          data: []
+        }
+        vertical.push(verticalItem)
+      })
+      data.value.forEach(el => {
+        for (let index = 0; index < el.length; index++) {
+          const element = el[index]
+          vertical[index].data.push(element.value)
+        }
+      })
       const option = {
         backgroundColor: '#fff',
-        color: [
-          '#4A9BFD',
-          '#E95F45',
-          '#01A292'
-        ],
+        color: this.lineChart.type ? colors.splice(0, 3) : colors,
         tooltip: {
           trigger: 'axis',
           axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -278,8 +300,8 @@ export default {
         },
         grid: {
           top: '5%',
-          left: '0%',
-          right: '2%',
+          left: '1%',
+          right: '40px',
           bottom: '1%',
           containLabel: true
         },
@@ -291,7 +313,10 @@ export default {
               color: '#999'
             }
           },
-          data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+          axisLabel: {
+            interval: 'auto'
+          },
+          data: horizontal
         },
         yAxis: {
           type: 'value',
@@ -301,34 +326,40 @@ export default {
             }
           }
         },
-        series: [
-          {
-            name: '邮件',
-            type: 'line',
-            smooth: true,
-            symbolSize: 6,
-            data: [120, 82, 101, 134, 90, 230, 210]
-          },
-          {
-            name: '联盟',
-            type: 'line',
-            smooth: true,
-            symbolSize: 6,
-            data: [220, 182, 191, 234, 290, 330, 310]
-          },
-          {
-            name: '视频广告',
-            type: 'line',
-            smooth: true,
-            symbolSize: 6,
-            data: [150, 232, 201, 154, 190, 330, 310]
-          }
-        ]
+        series: vertical
+      }
+      if (this.lineChart.instance) {
+        this.lineChart.instance.clear()
       }
       this.drawLineChart('home-chart-top', option)
     },
-    showBottomChart () {
+    showBottomChart (data) {
+      if (!data) {
+        return false
+      }
+      const colors = ['#4A9BFD', '#E95F45', '#01A292', '#FA9857', '#6BB7F3', '#23B6AE']
+      const horizontal = data.key.map(el => {
+        return el.substring(-1, 3)
+      })
+      const values = data.value
+      let vertical = []
+      values[0].forEach(e => {
+        const verticalItem = {
+          name: e.name,
+          type: 'bar',
+          barWidth: 5,
+          data: []
+        }
+        vertical.push(verticalItem)
+      })
+      data.value.forEach(el => {
+        for (let index = 0; index < el.length; index++) {
+          const element = el[index]
+          vertical[index].data.push(element.value)
+        }
+      })
       const option = {
+        color: this.barChart.type ? colors.splice(0, 3) : colors,
         tooltip: {
           trigger: 'axis',
           backgroundColor: '#fff',
@@ -346,11 +377,14 @@ export default {
         },
         xAxis: [{// x轴
           type: 'category',
-          data: ['2017-05-01', '2017-05-02', '2017-05-03', '2017-05-04', '2017-05-06', '2017-05-07', '2017-05-08'],
+          data: horizontal,
           axisLine: { // 坐标轴轴线相关设置。
             lineStyle: {
               color: '#999'
             }
+          },
+          axisLabel: {
+            interval: 0
           }
         }],
         yAxis: [{// y轴
@@ -361,22 +395,10 @@ export default {
             }
           }
         }],
-        series: [{// 系列列表。每个系列通过 type 决定自己的图表类型
-          name: '直接访问', // 系列名称，用于tooltip的显示
-          type: 'bar',
-          barWidth: 5,
-          data: [10, 52, 200, 334, 390, 330, 220]
-        }, {// 系列列表。每个系列通过 type 决定自己的图表类型
-          name: '必应访问', // 系列名称，用于tooltip的显示
-          type: 'bar',
-          barWidth: 5,
-          data: [22, 112, 230, 334, 340, 350, 320]
-        }, {// 系列列表。每个系列通过 type 决定自己的图表类型
-          name: '微博访问', // 系列名称，用于tooltip的显示
-          type: 'bar',
-          barWidth: 5,
-          data: [22, 82, 230, 234, 350, 350, 320]
-        }]
+        series: vertical
+      }
+      if (this.barChart.instance) {
+        this.barChart.instance.clear()
       }
       this.drawLineChart('home-chart-bottom', option)
     }

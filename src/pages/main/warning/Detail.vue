@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-05 17:25:29
  * @Email: zlf@zuolongfei.me
  */
 
@@ -11,34 +11,14 @@
     <div>
     <div class="people-detail-box global-list-container royal-paper royal-paper-1">
         <div class="detail-box-title">人员信息详情</div>
-        <div>
+        <div class="people-detail-avator">
+            <img :src="info.photo" alt="" v-if="info.photo">
+        </div>
+        <div class="people-detail-item-box">
+
             <el-form label-position="left"  inline class="detail-info-form">
-                <template v-if="matchType==3">
-                    <el-form-item label="地址：">
-                        <span>{{info.address}}</span>
-                    </el-form-item>
-                    <el-form-item label="导入模板名称：">
-                        <span>{{ info.template }}</span>
-                    </el-form-item>
-                    <el-form-item label="比中用水量：">
-                        <span>{{ info.nCount }}</span>
-                    </el-form-item>
-                    <el-form-item label="比中用水价格：">
-                        <span>{{ info.nPrice }}元</span>
-                    </el-form-item>
-                    <el-form-item label="历史月均用水量：">
-                        <span>{{ info.avgCount }} 吨</span>
-                    </el-form-item>
-                    <el-form-item label="历史月均用水价格：">
-                        <span>{{ info.avgPrice }} 元</span>
-                    </el-form-item>
-                    <el-form-item label="环比增长率：">
-                        <span>{{ info.rate }} %</span>
-                    </el-form-item>
-                </template>
-                <template v-else>
                     <el-form-item label="姓名：">
-                        <span>{{ info.name}}</span>
+                        <span>{{info.name}}</span>
                     </el-form-item>
 
                     <el-form-item label="身份证号：">
@@ -47,36 +27,44 @@
                         </span>
                     </el-form-item>
                         <el-form-item label="手机号码：">
-                        <span>{{ info.phone }}</span>
+                        <span>{{info.phone }}</span>
                     </el-form-item>
                     <el-form-item label="户籍所在地：">
-                        <span>{{ info.homeArea }}</span>
+                        <span>{{info.homeArea }}</span>
                     </el-form-item>
                     <el-form-item label="户籍地址：">
-                        <span>{{ info.homeAddress }}</span>
+                        <span>{{info.homeAddress }}</span>
                     </el-form-item>
                     <el-form-item label="现居住地：">
-                        <span>{{ info.nowArea }}</span>
+                        <span>{{info.nowArea }}</span>
                     </el-form-item>
                     <el-form-item label="现居住地址：">
-                        <span>{{ info.nowAddress }}</span>
+                        <span>{{info.nowAddress }}</span>
                     </el-form-item>
-                </template>
             </el-form>
         </div>
+        <div class="clear"></div>
+        <div class="detail-box-subtitle matchType" >
+            <span>比中预警</span>
+            <span class="patch-type" :style="{color:colors[matchType - 1]}">{{matchTypeString}}</span>
+        </div>
         <div class="detail-box-subtitle">
-            <span>比中结果</span>
-            <span class="patch-type">上门调查</span>
-            <span>
-                 <el-button type="primary" size="mini" @click="doHandle">处理</el-button>
-            </span>
+            <span>历史记录</span>
+        </div>
+        <div>
+            <el-form label-position="left"  inline class="detail-info-form">
+                    <el-form-item :label="item.name+'：'" v-for="item in historyList" :key="item.filed">
+                        <span>{{item.value}}</span>
+                    </el-form-item>
+            </el-form>
         </div>
     </div>
+
     <div class="global-list-container royal-paper royal-paper-1">
         <div class="detail-box-title">轨迹记录</div>
         <div class="list-wrap">
              <el-table
-            :data="dataList"
+            :data="trackList"
             style="width: 100%">
             <el-table-column label="序号" width="60">
                 <template slot-scope="props">
@@ -86,7 +74,7 @@
             <el-table-column
                 label="地址"
                 align="center"
-                prop="trackAddress"
+                prop="address"
                 >
             </el-table-column>
             <el-table-column
@@ -95,40 +83,35 @@
                 prop="dataSource">
             </el-table-column>
             <el-table-column
-                label="处理记录"
-                align="center"
-                prop="handleResult">
-            </el-table-column>
-            <el-table-column
-                label="处理人"
-                align="center"
-                prop="handleUser">
-            </el-table-column>
-            <el-table-column
                 label="时间"
                 prop="time">
             </el-table-column>
         </el-table>
 
         </div>
+        <div class="pagination-wrap" v-if="total">
+            <el-pagination
+            @current-change="handleCurrentChange"
+            :current-page="curPage"
+            :page-size="10"
+            layout="total,prev, pager, next, jumper"
+            :total="total">
+            </el-pagination>
+        </div>
     </div>
     </div>
 </template>
 <script>
+import HistoryData from './history.js'
 export default {
   name: 'warningDetail',
   data () {
     return {
-      matchType: '',
+
       // 上门调查
       info: {
-        template: '',
-        address: '',
-        avgCount: '', // 平均用水量
-        avgPrice: '', // 平均用水价格
-        nCount: '', // 比中用水量
-        nPrice: '', // 比中用水价格
         name: '',
+        photo: '',
         idCard: '', // 身份证
         phone: '',  // 电话
         homeArea: '', // 户籍所在地
@@ -136,28 +119,36 @@ export default {
         nowArea: '', // 现居地
         nowAddress: ''// 现居地址
       },
+      curPage: 1,
+      total: 0,
       // 轨迹信息
-      dataList: []
+      trackList: [],
+      matchType: '',
+      matchTypeString: '',
+      // 索引对照 0-吸涉毒人员 1-关注人员 2-吸毒在逃 3-涉案在逃 4-历史涉案 5-非法出所
+      historyList: [],
+      colors: ['#FA9857', '#6BB7F3', '#01A292', '#E95F45', '#23B6AE', '#4A9BFD']
     }
   },
   created () {
-    this.getPageList()
+    this.getBaseDetail()
+    this.getDetailHistory()
+    this.getDetailTrack()
   },
   methods: {
     /**
-     * @description 获取列表数据
+     * @description 获取基本详情
      */
-    getPageList () {
+    getBaseDetail () {
       const id = this.$route.params.id
       if (!id) {
         return false
       }
-      this.$apis.people.getDetail(id)
+      this.$apis.warning.getBaseDetail(id)
         .then(res => {
           if (res.code == '0000') {
-            this.total = res.count
-            this.dataList = res.data.tracks
             this.matchType = res.data.matchType
+            this.matchTypeString = res.data.matchTypeString
             this.info = res.data.base
           }
         })
@@ -167,43 +158,19 @@ export default {
           }
         })
     },
-    doHandle () {
-      this.$prompt('请输入处理内容', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputPlaceholder: '请输入处理内容',
-        inputErrorMessage: '请输入处理内容'
-      }).then(({ value }) => {
-        this.uploadHandle(value)
-      }).catch(() => {
-        this.$notify({
-          type: 'info',
-          message: '取消输入'
-        })
-      })
-    },
-    uploadHandle (content) {
+    /**
+     * @description 获取历史记录
+     */
+    getDetailHistory () {
       const id = this.$route.params.id
       if (!id) {
         return false
       }
-      const params = {
-        id: id,
-        handleResult: content
-      }
-      this.$apis.people.doHandle(params)
+      this.$apis.warning.getDetailHistory(id)
         .then(res => {
           if (res.code == '0000') {
-            this.$notify({
-              type: 'success',
-              message: '处理成功'
-            })
-            this.getPageList()
-          } else {
-            this.$notify({
-              type: 'error',
-              message: res.data
-            })
+            console.log(res)
+            this.handleHistoryData(res.data)
           }
         })
         .catch(error => {
@@ -211,6 +178,43 @@ export default {
             console.log(error)
           }
         })
+    },
+    // 处理历史记录数据
+    handleHistoryData (data) {
+      const list = HistoryData[(data.matchType - 1)]
+      const result = data.history
+      this.historyList =   list.map(element => {
+        element.value = result[element.filed]
+        return element
+      })
+    },
+    /**
+     * @description 获取历史轨迹
+     */
+    getDetailTrack () {
+      const param = {
+        page: this.curPage,
+        id: this.$route.params.id
+      }
+      this.$apis.warning.getDetailTrack(param)
+        .then(res => {
+          if (res.code == '0000') {
+            this.total = res.data.trackCount
+            this.trackList = res.data.track
+          }
+        })
+        .catch(error => {
+          if (error) {
+            console.log(error)
+          }
+        })
+    },
+    /**
+     * @description 改变页码
+     */
+    handleCurrentChange (val) {
+      this.curPage = val
+      this.getDetailTrack()
     }
 
   }
@@ -234,6 +238,18 @@ export default {
 .patch-type
    color:#999
    margin 0 20px
+.people-detail-avator
+    width 80px;
+    min-height 80px;
+    float left;
+    padding-top 15px
+.people-detail-avator img
+    width 100%
+.people-detail-item-box
+    margin-left 100px
+    padding-top 6px
+.matchType
+  padding-bottom 20px
 >>>.detail-info-form .el-form-item__label
     font-size 16px
     color #333
@@ -245,4 +261,6 @@ export default {
     // min-width 200px
     margin-bottom 15px
     margin-right 20px;
+.pagination-wrap
+    padding 15px 0
 </style>

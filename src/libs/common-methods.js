@@ -1,7 +1,6 @@
-import config from '../config.js'
-const BASE_URL = config.baseUrl
+import config from '../config'
 const $common = {
-  openDownLoadLink (url, BASE) {
+  openDownLoadLink (url, needBaseUrl) {
     const linkForm = document.getElementById('open-link-form')
     let f
     if (linkForm) {
@@ -13,7 +12,7 @@ const $common = {
       document.body.appendChild(f)
     }
     f.method = 'post'
-    f.action = BASE ? BASE_URL + url : url // 下载的url 地址
+    f.action = needBaseUrl ? config.baseUrl + url : url // 下载的url 地址
     f.submit()
   }
 }

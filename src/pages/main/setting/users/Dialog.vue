@@ -141,6 +141,7 @@ export default {
         }).catch(err => console.log(err))
     },
     restForm () {
+      this.$refs['userForm'].resetFields()
       if (this.type === 'add') {
         this.userInfo = defaultInfo
       } else {

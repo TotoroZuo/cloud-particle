@@ -17,6 +17,7 @@ const frameIn = [
           title: 'index',
           name: '主页',
           icon: 'home',
+          router: '/index',
           requiresAuth: true
         },
         component: () => import('@/pages/main/Home.vue')
@@ -28,6 +29,7 @@ const frameIn = [
           title: 'warning',
           name: '预警',
           icon: 'dashboard',
+          router: '/warning',
           requiresAuth: true
         },
         component: () => import('@/pages/main/warning/List.vue')
@@ -39,6 +41,7 @@ const frameIn = [
           title: 'warningDetail',
           name: '预警详情',
           icon: 'dashboard',
+          router: '/warning',
           requiresAuth: true
         },
         component: () => import('@/pages/main/warning/Detail.vue')
@@ -50,6 +53,7 @@ const frameIn = [
           title: 'people',
           name: '人员信息',
           icon: 'dashboard',
+          router: '/people',
           requiresAuth: true
         },
         component: () => import('@/pages/main/people/List.vue')
@@ -61,6 +65,7 @@ const frameIn = [
           title: 'peopleDetail',
           name: '人员信息详情',
           icon: 'dashboard',
+          router: '/people',
           requiresAuth: true
         },
         component: () => import('@/pages/main/people/Detail.vue')
@@ -72,6 +77,7 @@ const frameIn = [
           title: 'statistics',
           name: '数据统计',
           icon: 'dashboard',
+          router: '/statistics',
           requiresAuth: true
         },
         component: () => import('@/pages/main/statistics/List.vue')
@@ -83,6 +89,7 @@ const frameIn = [
           title: 'imports',
           name: '导入文件',
           icon: 'dashboard',
+          router: '/imports',
           requiresAuth: true
         },
         component: () => import('@/pages/main/Import.vue')
@@ -94,6 +101,7 @@ const frameIn = [
           title: 'setting',
           name: '配置',
           icon: 'dashboard',
+          router: '/setting',
           requiresAuth: true
         },
         component: () => import('@/pages/main/setting/Setting.vue')

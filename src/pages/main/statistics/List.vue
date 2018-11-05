@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-05 21:37:39
  * @Email: zlf@zuolongfei.me
  */
 
@@ -65,7 +65,7 @@
                     align="center"
                     prop="org">
                 </el-table-column>
-                <el-table-column v-for="el in optionsList" :key="el.name" v-if="selectOptionsKeys.includes(el.name)"
+                <el-table-column v-for="el in optionsList" :key="el.name" v-if="isIncludes(selectOptionsKeys,el.name)"
                     :label="el.value"
                     align="center"
                     min-width="130"
@@ -89,7 +89,7 @@
     </div>
 </template>
 <script>
-
+import __ from 'lodash'
 export default {
   name: 'statisticsList',
   data () {
@@ -112,6 +112,9 @@ export default {
     this.getPageList()
   },
   methods: {
+    isIncludes (arr, value) {
+      return __.includes(arr, value)
+    },
     /**
      * @description 获取配置项数据
      */

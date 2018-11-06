@@ -5,7 +5,7 @@ const logo = '/logo.png'
 // 系统名称
 const systemName = '通用后台管理系统'
 // 接口地址url,用于代理和下载文件
-const baseUrl = 'http://localhost:8084'
+const baseUrl = 'http://127.0.0.1:8084'
 // 主题颜色
 const colors = {
   // 当前使用配色方案

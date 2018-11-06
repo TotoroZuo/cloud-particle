@@ -42,20 +42,20 @@
                     <template v-for="(item,index) in warningList">
                         <TimelineItem :key="item.id" v-if="index<1">
                         <p class="timeline-content timeline-active">
-                            <span class="titmeline-span">{{item.dataSource}}</span>
+                            <span class="titmeline-span">{{item.matchTypeString}}</span>
                             <span class="titmeline-span">{{item.personName}}</span>
                             <span class="titmeline-span">{{item.personIdCard}}</span>
                         </p>
-                        <p class="timeline-time timeline-active">{{item.gmtCreate}}</p>
+                        <p class="timeline-time timeline-active">{{item.time}}</p>
                         </TimelineItem>
                         <TimelineItem :key="item.id" v-else>
                             <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
                             <p class="timeline-content">
-                                <span class="titmeline-span">{{item.dataSource}}</span>
+                                <span class="titmeline-span">{{item.matchTypeString}}</span>
                                 <span class="titmeline-span">{{item.personName}}</span>
                                 <span class="titmeline-span">{{item.personIdCard}}</span>
                             </p>
-                            <p class="timeline-time">{{item.gmtCreate}}</p>
+                            <p class="timeline-time">{{item.time}}</p>
                         </TimelineItem>
                     </template>
 
@@ -95,20 +95,22 @@
                     <template v-for="(item,index) in peopleList">
                         <TimelineItem :key="item.id" v-if="index<1">
                         <p class="timeline-content timeline-active">
-                            <span class="titmeline-span">{{item.dataSource}}</span>
-                            <span class="titmeline-span">{{item.personName}}</span>
-                            <span class="titmeline-span">{{item.personIdCard}}</span>
+                            <span class="titmeline-span">{{item.matchTypeString}}</span>
+                            <span class="titmeline-span" v-if="item.matchType==3">{{item.personAddress}}</span>
+                            <span class="titmeline-span" v-if="item.matchType!=3">{{item.personName}}</span>
+                            <span class="titmeline-span" v-if="item.matchType!=3">{{item.personIdCard}}</span>
                         </p>
-                        <p class="timeline-time timeline-active">{{item.gmtCreate}}</p>
+                        <p class="timeline-time timeline-active">{{item.time}}</p>
                         </TimelineItem>
                         <TimelineItem :key="item.id" v-else>
                             <i class="material-icons timeline-icon" slot="dot">fiber_manual_record</i>
                             <p class="timeline-content">
-                                <span class="titmeline-span">{{item.dataSource}}</span>
-                                <span class="titmeline-span">{{item.personName}}</span>
-                                <span class="titmeline-span">{{item.personIdCard}}</span>
+                                <span class="titmeline-span">{{item.matchTypeString}}</span>
+                                <span class="titmeline-span" v-if="item.matchType==3">{{item.personAddress}}</span>
+                                <span class="titmeline-span" v-if="item.matchType!=3">{{item.personName}}</span>
+                                <span class="titmeline-span" v-if="item.matchType!=3">{{item.personIdCard}}</span>
                             </p>
-                            <p class="timeline-time">{{item.gmtCreate}}</p>
+                            <p class="timeline-time">{{item.time}}</p>
                         </TimelineItem>
                     </template>
 

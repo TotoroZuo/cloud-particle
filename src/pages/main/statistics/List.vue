@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-05 21:37:39
+ * @LastEditTime: 2018-11-06 14:29:06
  * @Email: zlf@zuolongfei.me
  */
 
@@ -154,7 +154,7 @@ export default {
       this.$apis.statistics.getPageList(param)
         .then(res => {
           if (res.code == '0000') {
-            this.total = res.count
+            this.total    = res.count
             this.dataList = res.data
           }
         })

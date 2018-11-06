@@ -1,5 +1,5 @@
 
-const baseUrl = 'http://localhost:8084'
+const baseUrl = 'http://127.0.0.1:8084'
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   baseUrl: process.env.NODE_ENV === 'production' ? '/' : '/',

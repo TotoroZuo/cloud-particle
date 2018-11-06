@@ -2,7 +2,7 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-09-10 19:26:49
+ * @LastEditTime: 2018-11-06 14:50:32
  * @Description: 用户模块接口
  * @Email: zlf@zuolongfei.me
  */
@@ -38,7 +38,7 @@ const doLogout = options => {
  * @param  {String} options.password 用户密码
  * @param  {String} options.avator 头像
  * @param  {String} options.org 所属部门
- * @param  {Array} options.role 角色
+ * @param  {Array}  options.role 角色
  * @param  {String} options.name  姓名
  * @param  {String} options.enable 启用状态
  * @param  {String} options.phone 手机号
@@ -72,9 +72,9 @@ const addUser = options => {
  * @param  {String} options.avator 头像
  * @param  {String} options.org 所属部门
  * @param  {Array}  options.role 角色
- * @param  {String} options.name  姓名
+ * @param  {String}  options.name  姓名
  * @param  {Boolean} options.enable 启用状态
- * @param  {String} options.phone 手机号
+ * @param  {String}  options.phone 手机号
  * @param  {String} options.idcard 身份证号
  * @param  {Boolean} options.isSuper 是否拥有超级权限
  * @return {Object} 接口返回数据

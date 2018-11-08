@@ -194,6 +194,13 @@ export default {
         .then((res) => {
           if (res.code == '0000') {
             this.showTopChart(res.data)
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         }).catch(error => {
           if (error) {
@@ -211,6 +218,13 @@ export default {
         .then((res) => {
           if (res.code == '0000') {
             this.showBottomChart(res.data)
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         }).catch(error => {
           if (error) {
@@ -226,6 +240,13 @@ export default {
         .then((res) => {
           if (res.code == '0000') {
             this.warningList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         }).catch(error => {
           if (error) {
@@ -241,6 +262,13 @@ export default {
         .then((res) => {
           if (res.code == '0000') {
             this.peopleList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         }).catch(error => {
           if (error) {

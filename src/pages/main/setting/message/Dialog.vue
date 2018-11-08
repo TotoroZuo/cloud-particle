@@ -73,6 +73,13 @@ export default {
       this.$apis.settingMessage.getRuleList().then(res => {
         if (res.code == '0000') {
           this.ruleList = res.data
+        } else {
+          this.$notify({
+            title: '数据异常',
+            message: res.data,
+            position: 'top-right',
+            type: 'warning'
+          })
         }
       }).catch(error => {
         if (error) {
@@ -85,6 +92,13 @@ export default {
       this.$apis.settingUser.getOrgList().then(res => {
         if (res.code == '0000') {
           this.orgList = res.data
+        } else {
+          this.$notify({
+            title: '数据异常',
+            message: res.data,
+            position: 'top-right',
+            type: 'warning'
+          })
         }
       }).catch(error => {
         if (error) {

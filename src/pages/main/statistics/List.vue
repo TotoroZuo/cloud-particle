@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-06 14:29:06
+ * @LastEditTime: 2018-11-08 13:50:17
  * @Email: zlf@zuolongfei.me
  */
 
@@ -131,6 +131,12 @@ export default {
             defaultKeys = keys.splice(0, 7)
             this.selectOptionsKeys = defaultKeys
             this.selectOptionsTempKeys = [...defaultKeys]
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              type: 'warning'
+            })
           }
         })
         .catch(error => {
@@ -156,6 +162,13 @@ export default {
           if (res.code == '0000') {
             this.total    = res.count
             this.dataList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         })
         .catch(error => {
@@ -192,9 +205,15 @@ export default {
       this.importing = true
       this.$apis.statistics.doExport(param)
         .then(res => {
-          console.log(res)
           if (res.code == '0000') {
             this.$common.openDownLoadLink(res.data, true)
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
           this.importing = false
         })

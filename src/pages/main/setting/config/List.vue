@@ -3,14 +3,14 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-08 13:46:02
  * @Email: zlf@zuolongfei.me
  */
 
 <template>
     <div class="users-list-container">
         <div class="search-right">
-            <el-input placeholder="请输入人员姓名或身份证号" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
+            <el-input placeholder="请输入比中名称、比对条件" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
                     <el-button slot="append" icon="el-icon-search" @click="getPageList"></el-button>
             </el-input>
         </div>
@@ -102,6 +102,13 @@ export default {
           if (res.code == '0000') {
             this.total = res.count
             this.dataList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         })
         .catch(error => {

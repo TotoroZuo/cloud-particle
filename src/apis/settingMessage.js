@@ -2,13 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-09-10 19:26:49
+ * @LastEditTime: 2018-11-07 11:54:35
  * @Description: 配置模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
-
+const $apis = '/apis'
 /**
  * @description 获取页面数据
  * @param  {String} options.pageNum 页码
@@ -17,7 +17,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getPageList = options => {
-  const url = '/smsRule/pageList'
+  const url = $apis + '/smsRule/pageList'
   const params = {
     pageNum: options.page,
     pageSize: 10
@@ -32,7 +32,7 @@ const getPageList = options => {
  * @description 获取推送模块数据
  */
 const getRuleList = options => {
-  const url = '/smsRule/templateList'
+  const url = $apis + '/smsRule/templateList'
   return $request.post(url, {})
 }
 
@@ -47,7 +47,7 @@ const getRuleList = options => {
  * @param  {String} options.smsUserPhone 手机号
  */
 const addEditorUser = (options, type) => {
-  const url = type == 'add' ? '/smsRule/add' : '/smsRule/update'
+  const url = type == 'add' ? $apis + '/smsRule/add' : $apis + '/smsRule/update'
   const params = { ...options }
   params.smsRuleTemplate = params.smsRuleTemplate.join(',')
   return $request.post(url, params)
@@ -57,7 +57,7 @@ const addEditorUser = (options, type) => {
  * @description 更改账号状态
  */
 const changeUserStatus = options => {
-  const url = '/smsRule/updateStatus'
+  const url = $apis + '/smsRule/updateStatus'
   return $request.post(url, { smsRuleId: options })
 }
 export default {

@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-08 13:52:13
  * @Email: zlf@zuolongfei.me
  */
 
@@ -11,7 +11,7 @@
     <div class="global-list-container royal-paper royal-paper-1">
         <div class="search-container">
             <div class="search-left">
-                <el-radio-group v-model="cateType" size="small">
+                <el-radio-group v-model="cateType" size="small" @change="getPageList">
                     <el-radio-button :label="0">全部信息 {{cateCount.qbxx ? cateCount.qbxx : ''}}</el-radio-button>
                     <el-radio-button :label="1">流口登记 {{cateCount.lkdj ? cateCount.lkdj : ''}}</el-radio-button>
                     <el-radio-button :label="2">人户分离 {{cateCount.rhfl ? cateCount.rhfl : ''}}</el-radio-button>
@@ -117,6 +117,13 @@ export default {
           if (res.code == '0000') {
             this.total = res.count
             this.dataList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         })
         .catch(error => {
@@ -133,6 +140,13 @@ export default {
         .then(res => {
           if (res.code == '0000') {
             this.cateCount = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         }).catch(error => {
           if (error) {

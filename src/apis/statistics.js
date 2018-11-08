@@ -2,13 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-05 14:34:20
+ * @LastEditTime: 2018-11-07 11:56:04
  * @Description: 人员信息模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
-
+const $apis = '/apis'
 /**
  * @description 获取页面数据
  * @param  {String} options.pageNum 页码
@@ -18,7 +18,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getPageList = options => {
-  const url = '/platformStatistics/pageList'
+  const url = $apis + '/platformStatistics/pageList'
   const params = {
     pageNum: options.page,
     pageSize: 10,
@@ -36,7 +36,7 @@ const getPageList = options => {
  * @return {Object} 接口返回数据
  */
 const getConfigList = options => {
-  const url = '/platformStatistics/configList'
+  const url = $apis + '/platformStatistics/configList'
   return $request.post(url, {})
 }
 
@@ -44,7 +44,7 @@ const getConfigList = options => {
  * @description 导出数据
  */
 const doExport = options => {
-  const url = '/platformStatistics/export'
+  const url = $apis + '/platformStatistics/export'
   const params = {}
   if (options.startDate && options.endDate) {
     params.startDate = options.startDate

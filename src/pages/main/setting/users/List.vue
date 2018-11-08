@@ -3,14 +3,14 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-08 13:53:23
  * @Email: zlf@zuolongfei.me
  */
 
 <template>
     <div class="users-list-container">
         <div class="search-right">
-            <el-input placeholder="请输入人员姓名或身份证号" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
+            <el-input placeholder="搜索姓名、手机号码、身份证号、单位" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
                     <el-button slot="append" icon="el-icon-search" @click="getPageList"></el-button>
             </el-input>
 
@@ -61,13 +61,13 @@
                 width="80"
                 label="状态">
                 <template slot-scope="props">
-                     {{props.row.status ?'禁用':'正常'}}
+                     {{props.row.userStatus ?'禁用':'正常'}}
                  </template>
             </el-table-column>
             <el-table-column label="操作" width="100" align="center">
                  <template slot-scope="props">
                      <el-button type="text" size="small" title="编辑用户" @click="showEditorUser(props.row)">编辑</el-button>
-                     <el-button type="text" size="small" :title="props.row.status ?'启用':'禁用'" @click="confirmChangeStatus(props.row.userId,props.row.status)">{{props.row.status ?'启用':'禁用'}}</el-button>
+                     <el-button type="text" size="small" :title="props.row.userStatus ?'启用':'禁用'" @click="confirmChangeStatus(props.row.userId,props.row.userStatus)">{{props.row.userStatus ?'启用':'禁用'}}</el-button>
                  </template>
             </el-table-column>
         </el-table>
@@ -119,6 +119,13 @@ export default {
           if (res.code == '0000') {
             this.total = res.count
             this.dataList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         })
         .catch(error => {
@@ -166,11 +173,6 @@ export default {
         type: 'warning'
       }).then(() => {
         this.changeUserStatus(id)
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消操作'
-        })
       })
     },
     changeUserStatus (id) {

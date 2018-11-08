@@ -3,14 +3,14 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-08 13:49:07
  * @Email: zlf@zuolongfei.me
  */
 
 <template>
     <div class="global-list-container royal-paper royal-paper-1">
         <div class="imports-btns">
-            <el-button type="primary" size="small" v-if="type && fileLists.length">确定导入</el-button>
+            <el-button type="primary" size="small" v-if="type && fileLists.length" @click="submitUpload">确定导入</el-button>
             <el-button type="primary" size="small" @click="dialogVisible=true">模板下载</el-button>
         </div>
         <el-form ref="form"  label-width="80px" label-position="left" size="small">
@@ -29,7 +29,8 @@
                     class="avatar-uploader"
                     ref="upload"
                     :with-credentials="true"
-                    action="/file/upload"
+                    action="/apis/file/upload"
+                    :on-success="uploadDone"
                     name="file"
                     :auto-upload="false"
                     :data="{type:type}"
@@ -79,7 +80,6 @@ export default {
   methods: {
 
     rechooseFile (files, fileList) {
-      console.log(this.fileLists)
       if (fileList.length > 1) {
         this.fileLists = fileList.slice(-1)
       } else {
@@ -90,6 +90,13 @@ export default {
       this.$apis.imports.getTypeList().then(res => {
         if (res.code == '0000') {
           this.options = res.data
+        } else {
+          this.$notify({
+            title: '数据异常',
+            message: res.data,
+            position: 'top-right',
+            type: 'warning'
+          })
         }
       }).catch(error => {
         if (error) {
@@ -98,8 +105,30 @@ export default {
       })
     },
     downloadTemplate () {
-      const url = '/file/downloadTemplate?type=' + this.templateType
+      const url = '/apis/file/downloadTemplate?type=' + this.templateType
       this.$common.openDownLoadLink(url)
+      this.dialogVisible = false
+    },
+    submitUpload () {
+      this.$refs.upload.submit()
+    },
+    uploadDone (res, file, fileList) {
+      if (res.code == '0000') {
+        this.$alert('导入成功', {
+          confirmButtonText: '确定',
+          type: 'success',
+          center: true
+        }).then(() => {
+          this.type = ''
+          this.$refs.upload.clearFiles()
+        })
+      } else {
+        this.$alert(res.data, {
+          confirmButtonText: '确定',
+          type: 'error',
+          center: true
+        })
+      }
     },
     clearTemplateType () {
       this.templateType = null

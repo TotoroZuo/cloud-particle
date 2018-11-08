@@ -2,13 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-09-10 19:26:49
+ * @LastEditTime: 2018-11-07 11:54:02
  * @Description: 配置模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
-
+const $apis = '/apis'
 /**
  * @description 获取页面数据
  * @param  {String} options.pageNum 页码
@@ -17,7 +17,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getPageList = options => {
-  const url = '/policyConfig/pageList'
+  const url = $apis + '/policyConfig/pageList'
   const params = {
     pageNum: options.page,
     pageSize: 10
@@ -40,7 +40,7 @@ const getPageList = options => {
  */
 
 const addEditorUser = (options, type) => {
-  const url = type == 'add' ? '/policyConfig/add' : '/policyConfig/update'
+  const url = type == 'add' ? $apis + '/policyConfig/add' : $apis + '/policyConfig/update'
   const params = { ...options }
   params.policyConfigCondition = JSON.stringify(params.policyConfigCondition)
   return $request.post(url, params)

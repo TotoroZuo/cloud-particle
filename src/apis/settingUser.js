@@ -2,13 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-09-10 19:26:49
+ * @LastEditTime: 2018-11-07 11:55:26
  * @Description: 配置用户模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
-
+const $apis = '/apis'
 /**
  * @description 获取页面数据
  * @param  {String} options.pageNum 页码
@@ -17,7 +17,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getPageList = options => {
-  const url = '/user/pageList'
+  const url = $apis + '/user/pageList'
   const params = {
     pageNum: options.page,
     pageSize: 10
@@ -32,7 +32,7 @@ const getPageList = options => {
  * @description 获取部门数据
  */
 const getOrgList = options => {
-  const url = '/user/listOrg'
+  const url = $apis + '/user/listOrg'
   return $request.post(url, {})
 }
 
@@ -40,7 +40,7 @@ const getOrgList = options => {
  * @description 获取角色数据
  */
 const getRoleList = options => {
-  const url = '/user/listRole'
+  const url = $apis + '/user/listRole'
   return $request.post(url, {})
 }
 
@@ -58,7 +58,7 @@ const getRoleList = options => {
  * @param
  */
 const addEditorUser = (options, type) => {
-  const url = type == 'add' ? '/user/add' : '/user/update'
+  const url = type == 'add' ? $apis + '/user/add' : $apis + '/user/update'
   const params = { ...options }
   if (type != 'add' && !params.userPassword) {
     delete params.userPassword
@@ -70,7 +70,7 @@ const addEditorUser = (options, type) => {
  * @description 更改账号状态
  */
 const changeUserStatus = options => {
-  const url = '/user/updateStatus'
+  const url = $apis + '/user/updateStatus'
   return $request.post(url, { userId: options })
 }
 export default {

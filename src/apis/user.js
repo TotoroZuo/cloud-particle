@@ -2,13 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-06 14:50:32
+ * @LastEditTime: 2018-11-07 11:57:11
  * @Description: 用户模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
-
+const $apis = '/apis'
 /**
  * @description 用户登录接口
  * @param  {String} options.userName 用户名
@@ -16,7 +16,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const doLogin = options => {
-  const url = '/login'
+  const url = $apis + '/login'
   const params = {
     username: options.userName,
     password: options.password
@@ -28,7 +28,7 @@ const doLogin = options => {
  * @description 用户退出登录接口
  */
 const doLogout = options => {
-  const url = '/logout'
+  const url = $apis + '/logout'
 
   return $request.post(url, {})
 }
@@ -48,7 +48,7 @@ const doLogout = options => {
  */
 
 const addUser = options => {
-  const url = '/user/add'
+  const url = $apis + '/user/add'
   const params = {
     account: options.account,
     password: options.password,
@@ -81,7 +81,7 @@ const addUser = options => {
  */
 
 const editorUser = options => {
-  const url = '/user/editor'
+  const url = $apis + '/user/editor'
   const params = {
     uid: options.uid,
     account: options.account,
@@ -105,7 +105,7 @@ const editorUser = options => {
  */
 
 const delUser = options => {
-  const url = '/user/delUser'
+  const url = $apis + '/user/delUser'
   const params = {
     uid: options.uid
   }
@@ -120,7 +120,7 @@ const delUser = options => {
  */
 
 const enableUser = options => {
-  const url = '/user/delUser'
+  const url = $apis + '/user/delUser'
   const params = {
     uid: options.uid,
     enable: Number(options.enable)
@@ -136,7 +136,7 @@ const enableUser = options => {
  */
 
 const changePassword = options => {
-  const url = '/user/changePassword'
+  const url = $apis + '/user/changePassword'
   const params = {
     oldPassword: options.old,
     newPassword: options.new,

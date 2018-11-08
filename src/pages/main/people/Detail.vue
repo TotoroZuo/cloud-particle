@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-05 15:31:57
+ * @LastEditTime: 2018-11-08 13:52:53
  * @Email: zlf@zuolongfei.me
  */
 
@@ -161,6 +161,10 @@ export default {
             this.matchType = res.data.matchType
             this.matchTypeString = res.data.matchTypeString
             this.info = res.data.base
+          } else {
+            this.$alert(res.data, {
+              confirmButtonText: '确定'
+            })
           }
         })
         .catch(error => {
@@ -177,11 +181,6 @@ export default {
         inputErrorMessage: '请输入处理内容'
       }).then(({ value }) => {
         this.uploadHandle(value)
-      }).catch(() => {
-        this.$notify({
-          type: 'info',
-          message: '取消输入'
-        })
       })
     },
     uploadHandle (content) {

@@ -2,13 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-05 16:00:56
+ * @LastEditTime: 2018-11-07 11:57:51
  * @Description: 预警模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
-
+const $apis = '/apis'
 /**
  * @description 获取页面数据
  * @param  {String} options.pageNum 页码
@@ -18,7 +18,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getPageList = options => {
-  const url = '/warningMatch/pageList'
+  const url = $apis + '/warningMatch/pageList'
   const params = {
     pageNum: options.page,
     pageSize: 10,
@@ -34,7 +34,7 @@ const getPageList = options => {
  * @description 获取分类数据
  */
 const getCateCount = options => {
-  const url = '/warningMatch/totalCount'
+  const url = $apis + '/warningMatch/totalCount'
   return $request.post(url, {})
 }
 
@@ -42,7 +42,7 @@ const getCateCount = options => {
  * @description 获取人员详情
  */
 const getBaseDetail = options => {
-  const url = '/warningMatch/detailBase'
+  const url = $apis + '/warningMatch/detailBase'
   return $request.post(url, { id: options })
 }
 
@@ -54,7 +54,7 @@ const getBaseDetail = options => {
  * @return {Object} 接口返回数据
  */
 const getDetailTrack = options => {
-  const url = '/warningMatch/detailTrack'
+  const url = $apis + '/warningMatch/detailTrack'
   const params = {
     pageNum: options.page,
     pageSize: 10,
@@ -68,7 +68,7 @@ const getDetailTrack = options => {
  * @description 获取比中详情历史记录
  */
 const getDetailHistory = options => {
-  const url = '/warningMatch/detailHistory'
+  const url = $apis + '/warningMatch/detailHistory'
   return $request.post(url, { id: options })
 }
 

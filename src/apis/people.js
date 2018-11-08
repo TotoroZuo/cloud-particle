@@ -2,13 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-09-10 19:26:49
+ * @LastEditTime: 2018-11-07 11:53:27
  * @Description: 人员信息模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
-
+const $apis = '/apis'
 /**
  * @description 获取页面数据
  * @param  {String} options.pageNum 页码
@@ -18,7 +18,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getPageList = options => {
-  const url = '/personMatch/pageList'
+  const url = $apis + '/personMatch/pageList'
   const params = {
     pageNum: options.page,
     pageSize: 10,
@@ -34,7 +34,7 @@ const getPageList = options => {
  * @description 获取分类数据
  */
 const getCateCount = options => {
-  const url = '/personMatch/totalCount'
+  const url = $apis + '/personMatch/totalCount'
   return $request.post(url, {})
 }
 
@@ -43,7 +43,7 @@ const getCateCount = options => {
  * @param  {String} options id
  */
 const getDetail = options => {
-  const url = '/personMatch/detail'
+  const url = $apis + '/personMatch/detail'
   return $request.post(url, { id: options })
 }
 /**
@@ -52,7 +52,7 @@ const getDetail = options => {
  * @param  {String} options.handleResult 处理结果
  */
 const doHandle = options => {
-  const url = '/personMatch/handle'
+  const url = $apis + '/personMatch/handle'
   return $request.post(url, options)
 }
 

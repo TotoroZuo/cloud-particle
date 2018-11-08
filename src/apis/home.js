@@ -2,12 +2,13 @@
  * @Author: Long maomao
  * @Date: 2018-09-10 19:08:45
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-05 11:19:22
+ * @LastEditTime: 2018-11-07 11:51:48
  * @Description: 首页模块接口
  * @Email: zlf@zuolongfei.me
  */
 
 import $request from '@/libs/http.js' // 导入http请求方法
+const $apis = '/apis'
 
 /**
  * @description 获取折线图数据接口
@@ -17,7 +18,7 @@ import $request from '@/libs/http.js' // 导入http请求方法
  * @return {Object} 接口返回数据
  */
 const getLineChartData = options => {
-  const url = '/statistics/countByDate2'
+  const url =  $apis + '/statistics/countByDate2'
 
   const params = {
     type: Number(options.type)
@@ -33,7 +34,7 @@ const getLineChartData = options => {
  * @description 获取柱状图数据接口
  */
 const getBarChartData = options => {
-  const url = '/statistics/countByOrg'
+  const url = $apis + '/statistics/countByOrg'
 
   const params = {
     type: Number(options.type)
@@ -45,7 +46,7 @@ const getBarChartData = options => {
  * @description 获取最新预警数据接口
  */
 const getWarningData = options => {
-  const url = '/warningMatch/newest'
+  const url = $apis + '/warningMatch/newest'
 
   const params = {
     num: 5
@@ -56,7 +57,7 @@ const getWarningData = options => {
  * @description 获取最新人员信息数据接口
  */
 const getPeopleData = options => {
-  const url = '/personMatch/newest'
+  const url = $apis + '/personMatch/newest'
 
   const params = {
     num: 5

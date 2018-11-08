@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-08 13:49:33
  * @Email: zlf@zuolongfei.me
  */
 
@@ -24,7 +24,7 @@
                 </el-radio-group>
             </div>
             <div class="search-right">
-                <el-input placeholder="请输入人员姓名或身份证号" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
+                <el-input placeholder="请输入比中人员姓名、身份证号" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
                     <el-button slot="append" icon="el-icon-search" @click="getPageList"></el-button>
                 </el-input>
             </div>
@@ -131,6 +131,13 @@ export default {
           if (res.code == '0000') {
             this.total = res.count
             this.dataList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         })
         .catch(error => {
@@ -147,6 +154,13 @@ export default {
         .then(res => {
           if (res.code == '0000') {
             this.cateCount = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         }).catch(error => {
           if (error) {

@@ -3,14 +3,14 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-08 13:44:51
  * @Email: zlf@zuolongfei.me
  */
 
 <template>
     <div class="users-list-container">
         <div class="search-right">
-            <el-input placeholder="请输入人员姓名或身份证号" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
+            <el-input placeholder="请输入姓名、手机号码" clearable size="small" v-model="search" @clear="getPageList" @keyup.enter.native="getPageList" class="input-with-select">
                     <el-button slot="append" icon="el-icon-search" @click="getPageList"></el-button>
             </el-input>
         </div>
@@ -113,6 +113,13 @@ export default {
           if (res.code == '0000') {
             this.total = res.count
             this.dataList = res.data
+          } else {
+            this.$notify({
+              title: '数据异常',
+              message: res.data,
+              position: 'top-right',
+              type: 'warning'
+            })
           }
         })
         .catch(error => {
@@ -158,11 +165,6 @@ export default {
         type: 'warning'
       }).then(() => {
         this.changeUserStatus(id)
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消操作'
-        })
       })
     },
     changeUserStatus (id) {

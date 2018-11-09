@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-08 13:50:17
+ * @LastEditTime: 2018-11-08 17:42:55
  * @Email: zlf@zuolongfei.me
  */
 
@@ -12,9 +12,9 @@
         <div class="search-container">
             <div class="search-left">
                 <el-radio-group v-model="cateType" size="small" @change="getPageList">
-                    <el-radio-button :label="1">分局</el-radio-button>
-                    <el-radio-button :label="2">派出所</el-radio-button>
-                    <el-radio-button :label="3">警务室</el-radio-button>
+                    <el-radio-button :label="1" v-if="userInfo.groupId == 1">分局</el-radio-button>
+                    <el-radio-button :label="2" v-else-if="userInfo.groupId < 3">派出所</el-radio-button>
+                    <el-radio-button :label="3" v-else>警务室</el-radio-button>
                 </el-radio-group>
                 <el-dropdown size="small" split-button type="primary" trigger="click" style="float:right;margin-left:15px;" @visible-change="clearTempOptions">
                 配置数据项
@@ -107,7 +107,8 @@ export default {
       optionsList: [] // 配置项列表
     }
   },
-  created () {
+  mounted () {
+    this.cateType = this.$store.state.user.info.groupId
     this.getConfigList()
     this.getPageList()
   },
@@ -229,6 +230,11 @@ export default {
   watch: {
     selectDate (val) {
       this.getPageList()
+    }
+  },
+  computed: {
+    userInfo () {
+      return this.$store.state.user.info
     }
   }
 }

@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-08 13:53:23
+ * @LastEditTime: 2018-11-08 17:22:19
  * @Email: zlf@zuolongfei.me
  */
 
@@ -42,6 +42,7 @@
             <el-table-column
                 label="身份证号"
                 align="center"
+                min-width="180"
                 prop="userIdCard">
             </el-table-column>
             <el-table-column

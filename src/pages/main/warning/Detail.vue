@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-08 13:49:45
+ * @LastEditTime: 2018-11-08 16:31:45
  * @Email: zlf@zuolongfei.me
  */
 
@@ -12,7 +12,7 @@
     <div class="people-detail-box global-list-container royal-paper royal-paper-1">
         <div class="detail-box-title">人员信息详情</div>
         <div class="people-detail-avator">
-            <img :src="info.photo" alt="" v-if="info.photo">
+            <img :src="'data:image/png;base64,'+info.photo" alt="" v-if="info.photo">
         </div>
         <div class="people-detail-item-box">
 
@@ -256,8 +256,8 @@ export default {
    color:#999
    margin 0 20px
 .people-detail-avator
-    width 80px;
-    min-height 80px;
+    width 60px;
+    min-height 75px;
     float left;
     padding-top 15px
 .people-detail-avator img

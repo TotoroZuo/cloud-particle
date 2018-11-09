@@ -12,6 +12,15 @@
                             v-for="nav in navs"
                             :key="nav.path"
                             :class="['el-menu-item','layout-menu-item',{'is-active': nav.path == activeMenu}]"
+                            v-if="nav.path != '/setting'"
+                            @click="handleClickMenu(nav.path)" >
+                              {{nav.name}}
+                            </li>
+                            <li
+                            v-for="nav in navs"
+                            :key="nav.path"
+                            :class="['el-menu-item','layout-menu-item',{'is-active': nav.path == activeMenu}]"
+                            v-if="nav.path == '/setting'&& userInfo.groupId==1"
                             @click="handleClickMenu(nav.path)" >
                               {{nav.name}}
                             </li>

@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-11-08 17:42:55
+ * @LastEditTime: 2018-11-09 16:23:24
  * @Email: zlf@zuolongfei.me
  */
 
@@ -13,8 +13,8 @@
             <div class="search-left">
                 <el-radio-group v-model="cateType" size="small" @change="getPageList">
                     <el-radio-button :label="1" v-if="userInfo.groupId == 1">分局</el-radio-button>
-                    <el-radio-button :label="2" v-else-if="userInfo.groupId < 3">派出所</el-radio-button>
-                    <el-radio-button :label="3" v-else>警务室</el-radio-button>
+                    <el-radio-button :label="2" v-if="userInfo.groupId < 3">派出所</el-radio-button>
+                    <el-radio-button :label="3" v-if="userInfo.groupId <= 3">警务室</el-radio-button>
                 </el-radio-group>
                 <el-dropdown size="small" split-button type="primary" trigger="click" style="float:right;margin-left:15px;" @visible-change="clearTempOptions">
                 配置数据项

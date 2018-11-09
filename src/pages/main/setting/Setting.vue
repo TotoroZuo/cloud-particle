@@ -3,7 +3,7 @@
  * @Author: Long maomao
  * @Date: 2018-10-23 11:39:52
  * @LastEditors: Long maomao
- * @LastEditTime: 2018-10-23 11:39:52
+ * @LastEditTime: 2018-11-09 16:39:56
  * @Email: zlf@zuolongfei.me
  */
 
@@ -37,6 +37,11 @@ export default {
   data () {
     return {
       tab: 'user'
+    }
+  },
+  mounted () {
+    if (this.$store.state.user.info.groupId != 1) {
+      this.$router.push({ name: 'index' })
     }
   }
 }
